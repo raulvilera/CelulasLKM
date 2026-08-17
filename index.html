@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E.E. Lydia Kitz Moreira – Ciências 6º ano</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #f0f4fa;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 10, 30, 0.15);
+            padding: 30px 35px;
+        }
+
+        .school-header {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b2b4b;
+            letter-spacing: -0.5px;
+            border-left: 12px solid #ffb347;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .student-info-panel {
+            background: #e8f0fe;
+            border-radius: 28px;
+            padding: 22px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 20px;
+            align-items: center;
+            border: 1px solid #bdd3f0;
+        }
+
+        .info-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            flex: 1 1 auto;
+            min-width: 230px;
+        }
+
+        .info-group label {
+            font-weight: 600;
+            color: #1a3d6d;
+            white-space: nowrap;
+        }
+
+        select,
+        input[type="text"] {
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            padding: 6px 0;
+            outline: none;
+            border-bottom: 2px dotted #8aa9d6;
+            font-weight: 500;
+            color: #0b2b4b;
+            width: 100%;
+            min-width: 160px;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        input[readonly] {
+            background-color: transparent;
+            cursor: default;
+        }
+
+        .hint-turma-primeiro {
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #7a4b12;
+            background: #fff3e0;
+            border: 1px dashed #ffb347;
+            border-radius: 20px;
+            padding: 8px 16px;
+        }
+
+        .title-activity {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #113a5e;
+            margin: 20px 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(145deg, #f9e6cf, #ffffff);
+            padding: 15px;
+            border-radius: 60px;
+            border: 2px solid #ffb347;
+        }
+
+        .sub {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #2c4b74;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .question-block {
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 25px 25px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 20, 50, 0.1);
+            border: 1px solid #dbe5f5;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question-icon {
+            font-size: 1.6rem;
+            background: #ffe0b0;
+            width: 55px;
+            min-width: 55px;
+            height: 55px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b1530f;
+            font-weight: 800;
+        }
+
+        .question-text-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .question-context {
+            font-size: 1rem;
+            color: #34506f;
+            line-height: 1.5;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #102b47;
+        }
+
+        .habilidade-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: #1a3d6d;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .options {
+            padding-left: 70px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f5f9ff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid #c8daf0;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+
+        .option-item:hover {
+            background: #e2edff;
+        }
+
+        .option-item.selected {
+            background: #1a3d6d;
+            color: white;
+            border-color: #0e2a4a;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .option-item.selected .option-text {
+            color: white;
+        }
+
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #f09b2c;
+        }
+
+        .option-text {
+            font-size: 1.05rem;
+            color: inherit;
+        }
+
+        .discursive-box {
+            padding-left: 70px;
+            margin-top: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            border: 2px solid #c0d4ed;
+            border-radius: 20px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            resize: vertical;
+            background: #fbfdff;
+        }
+
+        textarea:focus {
+            border-color: #ff9f4b;
+            outline: none;
+            background: #fffcf5;
+        }
+
+        .img-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d9e9ff;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 10px 0 15px 70px;
+            color: #1a4b79;
+            font-weight: 500;
+            gap: 12px;
+            border: 1px dashed #ffb347;
+            text-align: center;
+        }
+
+        .img-placeholder i {
+            font-size: 2.6rem;
+            color: #9a6a3b;
+        }
+
+        .submit-area {
+            text-align: center;
+            margin: 40px 0 10px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 12px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0a1f30;
+            transition: 0.07s;
+            border: 2px solid #ffb347;
+            color: white;
+        }
+
+        .btn-submit {
+            background: #113a5e;
+        }
+
+        .btn-submit:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #0a1f30;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-delete {
+            background: #b22222;
+            box-shadow: 0 5px 0 #6d0e0e;
+        }
+
+        .btn-delete:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #6d0e0e;
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            color: #3d5a78;
+            text-align: right;
+            font-size: 0.9rem;
+            border-top: 1px dashed #b3c9e5;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <div class="school-header">E.E. LYDIA KITZ MOREIRA</div>
+
+        <div class="student-info-panel">
+            <div class="info-group">
+                <label><i class="fas fa-users"></i> Turma:</label>
+                <select v-model="turmaSelecionada" @change="filtrarAlunos">
+                    <option value="">Selecione</option>
+                    <option value="A">6º Ano A</option>
+                    <option value="B">6º Ano B</option>
+                    <option value="C">6º Ano C</option>
+                </select>
+            </div>
+            <div class="info-group">
+                <label><i class="fas fa-user-graduate"></i> Nome:</label>
+                <select v-model="alunoSelecionado" @change="preencherDados" :disabled="!turmaSelecionada">
+                    <option :value="null">{{ turmaSelecionada ? '-- escolha --' : 'selecione a turma primeiro' }}</option>
+                    <option v-for="a in alunosFiltrados" :key="a.email" :value="a">{{ a.nome }}</option>
+                </select>
+            </div>
+            <div class="info-group">
+                <label><i class="fas fa-hashtag"></i> Nº chamada:</label>
+                <input type="text" v-model="numeroChamada" readonly placeholder="automático">
+            </div>
+            <div class="info-group">
+                <label><i class="fas fa-id-card"></i> RA:</label>
+                <input type="text" v-model="raAluno" readonly placeholder="automático">
+            </div>
+            <div class="info-group">
+                <label><i class="fas fa-envelope"></i> E-mail institucional:</label>
+                <input type="text" v-model="emailAluno" readonly placeholder="@al.educacao.sp.gov.br">
+            </div>
+            <div class="info-group">
+                <label><i class="fas fa-calendar-day"></i> Data:</label>
+                <input type="text" v-model="dataAtividade" readonly>
+            </div>
+            <div class="hint-turma-primeiro" v-if="!turmaSelecionada">
+                <i class="fas fa-info-circle"></i> Selecione primeiro a sua <strong>turma</strong> para que a lista com os nomes dos alunos apareça no campo "Nome".
+            </div>
+        </div>
+
+        <div class="title-activity">ATIVIDADE DE CIÊNCIAS <span
+                style="font-size: 1.3rem; background: #ffe6b3; padding: 0 10px; border-radius: 30px;">3º BIMESTRE</span>
+        </div>
+        <div class="sub">🔬 A célula: teoria celular, microscopia, estrutura celular, seres eucariontes e procariontes, célula animal e célula vegetal</div>
+
+        <!-- QUESTÕES -->
+        <div v-for="(q, idx) in questoes" :key="idx" class="question-block">
+            <div class="question-header">
+                <span class="question-icon">{{ idx+1 }}</span>
+                <div class="question-text-wrap">
+                    <span class="habilidade-tag">{{ q.habilidade }}</span>
+                    <span class="question-context" v-if="q.contexto">{{ q.contexto }}</span>
+                    <span class="question-text">{{ q.pergunta }}</span>
+                </div>
+            </div>
+            <div class="img-placeholder" v-html="q.img"></div>
+
+            <div v-if="q.tipo === 'obj'" class="options">
+                <label v-for="(alt, i) in q.alternativas" :key="i" class="option-item"
+                    :class="{ selected: respostas[idx].escolha === i }">
+                    <input type="radio" :name="'q'+idx" :value="i" v-model="respostas[idx].escolha">
+                    <span class="option-text">{{ alt }}</span>
+                </label>
+            </div>
+
+            <div v-else class="discursive-box">
+                <textarea rows="4" v-model="respostas[idx].texto"
+                    placeholder="Digite sua resposta (será avaliada por IA)..."></textarea>
+            </div>
+        </div>
+
+        <div class="submit-area">
+            <button class="btn btn-submit" @click="enviarRespostas" :disabled="enviando">
+                <i class="fas" :class="enviando ? 'fa-spinner fa-spin' : 'fa-cloud-upload-alt'"></i>
+                {{ enviando ? 'ENVIANDO E CORRIGINDO...' : 'ENVIAR' }}
+            </button>
+            <button class="btn btn-delete" @click="excluirRespostas" :disabled="enviando"><i
+                    class="fas fa-trash-alt"></i> EXCLUIR</button>
+        </div>
+        <div class="footer-note">
+            <i class="fas fa-robot"></i> respostas discursivas serão corrigidas por IA automaticamente • planilha:
+            aba "6ºAno (Célula)"
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        (function () {
+            // ---------- DADOS DOS ALUNOS (atualizado a partir das listas oficiais das turmas) ----------
+            const alunosData = {
+                A: [
+                    { num: 1, nome: 'ANA CHRYSTINA TIEKO DA PAIXAO', ra: '115865039', dig: '5', email: '00001158650395SP@al.educacao.sp.gov.br' },
+                    { num: 2, nome: 'ANTONELLA ALVES XAVIER', ra: '121475554', dig: '9', email: '00001214755549SP@al.educacao.sp.gov.br' },
+                    { num: 3, nome: 'ARTHUR DANIEL MASSAKI LIMA', ra: '121483786', dig: '4', email: '00001214837864SP@al.educacao.sp.gov.br' },
+                    { num: 4, nome: 'BARBARA CRISTINA FERREIRA DA SILVA', ra: '123020364', dig: '3', email: '00001230203643sp@al.educacao.sp.gov.br' },
+                    { num: 5, nome: 'BERNARDO GOMES ANDRADE DE OLIVEIRA', ra: '121494038', dig: '9', email: '00001214940389sp@al.educacao.sp.gov.br' },
+                    { num: 6, nome: 'BYANCA DOS SANTOS PEREIRA', ra: '116500967', dig: '5', email: '00001165009675sp@al.educacao.sp.gov.br' },
+                    { num: 8, nome: 'DANIEL DA SILVA MARQUES', ra: '115877684', dig: '6', email: '00001158776846sp@al.educacao.sp.gov.br' },
+                    { num: 9, nome: 'DAVI LUCAS DA SILVA FEITOSA', ra: '116501864', dig: '0', email: '00001165018640SP@al.educacao.sp.gov.br' },
+                    { num: 11, nome: 'DIOGO SOARES FIUZA', ra: '120626520', dig: '6', email: '00001206265206sp@al.educacao.sp.gov.br' },
+                    { num: 12, nome: 'EDUARDA SOPHIA LOPES LIMA', ra: '116502560', dig: '7', email: '00001165025607SP@al.educacao.sp.gov.br' },
+                    { num: 13, nome: 'EDUARDA STHEFANY MARQUES DA SILVA', ra: '114738560', dig: '9', email: '00001147385609sp@al.educacao.sp.gov.br' },
+                    { num: 14, nome: 'ENZO GABRIEL SOUZA LOPES', ra: '115878997', dig: 'X', email: '0000115878997xsp@al.educacao.sp.gov.br' },
+                    { num: 15, nome: 'ESTER VITORIA FELIX DA CRUZ', ra: '115879196', dig: '3', email: '00001158791963SP@al.educacao.sp.gov.br' },
+                    { num: 16, nome: 'GUILHERME HENRIQUE ALMEIDA DO NASCIMENTO', ra: '122358464', dig: '1', email: '00001223584641sp@al.educacao.sp.gov.br' },
+                    { num: 17, nome: 'HIAGO ALEXANDRE BARBOSA DE PAULA', ra: '116671183', dig: '3', email: '00001166711833sp@al.educacao.sp.gov.br' },
+                    { num: 18, nome: 'JORGE GABRIEL SANTOS ASSIS', ra: '121487546', dig: '4', email: '00001214875464sp@al.educacao.sp.gov.br' },
+                    { num: 19, nome: 'MARIA CLARA MOURA ROMUALDO', ra: '125907584', dig: '9', email: '00001259075849sp@al.educacao.sp.gov.br' },
+                    { num: 20, nome: 'MATHEUS CARVALHO ROSA', ra: '121488429', dig: '5', email: '00001214884295SP@al.educacao.sp.gov.br' },
+                    { num: 22, nome: 'MELISSA MIRELLY OLIVEIRA DOS REIS', ra: '116517595', dig: '2', email: '00001165175952SP@al.educacao.sp.gov.br' },
+                    { num: 23, nome: 'MURILO SARAIVA TRINDADE', ra: '121479104', dig: '9', email: '00001214791049SP@al.educacao.sp.gov.br' },
+                    { num: 24, nome: 'PABLO LUCAS DA SILVA', ra: '115888557', dig: 'X', email: '0000115888557XSP@al.educacao.sp.gov.br' },
+                    { num: 25, nome: 'PEDRO HENRIQUE DO NASCIMENTO SANTOS', ra: '115889114', dig: '3', email: '00001158891143SP@al.educacao.sp.gov.br' },
+                    { num: 27, nome: 'PEDRO LUCAS CRUZ PRIORI', ra: '115889226', dig: '3', email: '00001158892263SP@al.educacao.sp.gov.br' },
+                    { num: 29, nome: 'PIETRO OLIVEIRA FREITAS', ra: '123926792', dig: '7', email: '00001239267927sp@al.educacao.sp.gov.br' },
+                    { num: 30, nome: 'RAFAEL ALVES ROCHA', ra: '124251136', dig: '2', email: '00001242511362sp@al.educacao.sp.gov.br' },
+                    { num: 31, nome: 'RIQUELME SOTERO RODRIGUES', ra: '123013870', dig: '5', email: '00001230138705SP@al.educacao.sp.gov.br' },
+                    { num: 32, nome: 'SOPHIA GIOVANA OLIVEIRA ALVES', ra: '116521364', dig: '3', email: '00001165213643SP@al.educacao.sp.gov.br' },
+                    { num: 33, nome: 'VINICIUS BESERRA ARAUJO', ra: '115067918', dig: '9', email: '00001150679189SP@al.educacao.sp.gov.br' },
+                    { num: 34, nome: 'VINICIUS RIBEIRO AMARAL ABRAHAO', ra: '116522317', dig: 'X', email: '0000116522317XSP@al.educacao.sp.gov.br' },
+                ],
+                B: [
+                    { num: 2, nome: 'ANA CLARA BATISTA BRITO', ra: '114693372', dig: '1', email: '00001146933721SP@al.educacao.sp.gov.br' },
+                    { num: 4, nome: 'ANNA JULIA CARVALHO MARQUES', ra: '121487411', dig: '3', email: '00001214874113sp@al.educacao.sp.gov.br' },
+                    { num: 7, nome: 'DAVI LUIZ CARDOSO BARBOSA', ra: '115878112', dig: 'X', email: '0000115878112xsp@al.educacao.sp.gov.br' },
+                    { num: 8, nome: 'ELOAH OLIVEIRA DE SOUZA', ra: '125473061', dig: '8', email: '00001254730618sp@al.educacao.sp.gov.br' },
+                    { num: 9, nome: 'ESTHER ARAUJO DE OLIVEIRA', ra: '120673269', dig: '6', email: '00001206732696SP@al.educacao.sp.gov.br' },
+                    { num: 10, nome: 'JAMILY FERNANDA GONZALES ADUVIRI', ra: '115364767', dig: '9', email: '00001153647679SP@al.educacao.sp.gov.br' },
+                    { num: 11, nome: 'KENNEDY GABRIEL ALVES DA SILVA', ra: '120513258', dig: '2', email: '00001205132582SP@al.educacao.sp.gov.br' },
+                    { num: 13, nome: 'LAURA VITORIA JESUS SOUZA', ra: '115885105', dig: '4', email: '00001158851054sp@al.educacao.sp.gov.br' },
+                    { num: 17, nome: 'MARIA EDUARDA RIBEIRO DE OLIVEIRA ROCHA', ra: '121490813', dig: '5', email: '00001214908135sp@al.educacao.sp.gov.br' },
+                    { num: 18, nome: 'MARIA LUIZA ALVES DA SILVA', ra: '123924084', dig: '3', email: '00001239240843sp@al.educacao.sp.gov.br' },
+                    { num: 20, nome: 'MATHEUS MEDEIROS DE FARIA MONZEN', ra: '120777079', dig: '6', email: '00001207770796SP@al.educacao.sp.gov.br' },
+                    { num: 23, nome: 'MIGUEL GOUVEA CARDOSO', ra: '121493503', dig: '5', email: '00001214935035SP@al.educacao.sp.gov.br' },
+                    { num: 24, nome: 'MIGUEL OLIVEIRA ALVES', ra: '115887723', dig: '7', email: '00001158877237SP@al.educacao.sp.gov.br' },
+                    { num: 26, nome: 'MIGUEL SILVA SOUZA', ra: '116518049', dig: '2', email: '00001165180492SP@al.educacao.sp.gov.br' },
+                    { num: 27, nome: 'MILLENA ALEJANDRA CARDOSO BUSTILLOS', ra: '116518275', dig: '0', email: '00001165182750SP@al.educacao.sp.gov.br' },
+                    { num: 28, nome: 'MILLENA OLIVEIRA DOS SANTOS', ra: '115070136', dig: '5', email: '00001150701365SP@al.educacao.sp.gov.br' },
+                    { num: 29, nome: 'NICOLE FERREIRA SANTOS', ra: '115888404', dig: '7', email: '00001158884047SP@al.educacao.sp.gov.br' },
+                    { num: 30, nome: 'NICOLLY EVARISTO DUTRA', ra: '122359565', dig: '1', email: '00001223595651SP@al.educacao.sp.gov.br' },
+                    { num: 33, nome: 'PIETRO GABRIEL VIEIRA DA SILVA', ra: '115313726', dig: '4', email: '00001153137264SP@al.educacao.sp.gov.br' },
+                    { num: 34, nome: 'RICHARD SAMUEL PEREIRA NASCIMENTO', ra: '121495981', dig: '7', email: '00001214959817SP@al.educacao.sp.gov.br' },
+                    { num: 35, nome: 'SARA CAROLINE FONSECA PORFIRIO', ra: '121622237', dig: 'X', email: '0000121622237xsp@al.educacao.sp.gov.br' },
+                    { num: 36, nome: 'SOPHIA RIBEIRO SANTOS', ra: '116521470', dig: '2', email: '00001165214702SP@al.educacao.sp.gov.br' },
+                    { num: 37, nome: 'THAYLA EMANOELLY ANDRADE FIDELIS', ra: '122358364', dig: '8', email: '00001223583648SP@al.educacao.sp.gov.br' },
+                    { num: 38, nome: 'VITORIA YASMIN FIRMINO DE OLIVEIRA', ra: '121494039', dig: '0', email: '00001214940390SP@al.educacao.sp.gov.br' },
+                    { num: 39, nome: 'WILLIAM ALVES CORAZZA', ra: '116522772', dig: '1', email: '00001165227721SP@al.educacao.sp.gov.br' },
+                    { num: 40, nome: 'MANUELA ELI DOS SANTOS SILVA', ra: '115886193', dig: 'X', email: '0000115886193xsp@al.educacao.sp.gov.br' },
+                    { num: 41, nome: 'DAVI HENRIQUE SILVA DE MELO', ra: '115877906', dig: '9', email: '00001158779069SP@al.educacao.sp.gov.br' },
+                    { num: 42, nome: 'EVELYN LORRANNY SANTOS OLIVEIRA', ra: '116503639', dig: '3', email: '00001165036393sp@al.educacao.sp.gov.br' },
+                ],
+                C: [
+                    { num: 1, nome: 'AMANDA MENDES DE SOUZA JOSÉ', ra: '120385412', dig: '2', email: '00001203854122SP@al.educacao.sp.gov.br' },
+                    { num: 2, nome: 'ANA JULIA DE SOUZA LOPES', ra: '121494768', dig: '2', email: '00001214947682sp@al.educacao.sp.gov.br' },
+                    { num: 3, nome: 'ARTHUR GOMES MINZÉ', ra: '120627732', dig: '4', email: '00001206277324SP@al.educacao.sp.gov.br' },
+                    { num: 4, nome: 'BRAYAN DE OLIVEIRA LOPES', ra: '116500830', dig: '0', email: '00001165008300sp@al.educacao.sp.gov.br' },
+                    { num: 5, nome: 'CARLOS HENRIQUE ROSA PAULINO', ra: '115066913', dig: '5', email: '00001150669135sp@al.educacao.sp.gov.br' },
+                    { num: 7, nome: 'DAVI LUCAS DE SOUZA SILVA', ra: '115877985', dig: '9', email: '00001158779859SP@al.educacao.sp.gov.br' },
+                    { num: 8, nome: 'DAVI LUCAS MATIAS RIBEIRO', ra: '116501902', dig: '4', email: '00001165019024sp@al.educacao.sp.gov.br' },
+                    { num: 9, nome: 'DAVI SOUSA OLIVEIRA', ra: '116502240', dig: '0', email: '00001165022400sp@al.educacao.sp.gov.br' },
+                    { num: 10, nome: 'FELIPE GABRIEL ALVES ARAUJO', ra: '115556262', dig: '8', email: '00001155562628SP@al.educacao.sp.gov.br' },
+                    { num: 11, nome: 'GEOVANA SALDANHA DOS SANTOS', ra: '116504471', dig: '7', email: '00001165044717sp@al.educacao.sp.gov.br' },
+                    { num: 15, nome: 'ISABELLY DE OLIVEIRA SANTOS', ra: '121484870', dig: '9', email: '00001214848709SP@al.educacao.sp.gov.br' },
+                    { num: 16, nome: 'JOHN GRIGORIO SILVA', ra: '116526248', dig: '4', email: '00001165262484SP@al.educacao.sp.gov.br' },
+                    { num: 17, nome: 'KAMILY GABRIELLY SOARES XAVIER', ra: '116357800', dig: '9', email: '00001163578009SP@al.educacao.sp.gov.br' },
+                    { num: 18, nome: 'KAROLINA APARECIDA DE LIRA', ra: '123013601', dig: '0', email: '00001230136010SP@al.educacao.sp.gov.br' },
+                    { num: 19, nome: 'LAVINIA LIUS DE ALMEIDA MORAES', ra: '116493606', dig: '2', email: '00001164936062SP@al.educacao.sp.gov.br' },
+                    { num: 20, nome: 'LEANDRO OLIVEIRA LINO', ra: '115885199', dig: '6', email: '00001158851996SP@al.educacao.sp.gov.br' },
+                    { num: 21, nome: 'LUAN HENRIQUE BERNEGOSSO DA CRUZ', ra: '121485099', dig: '6', email: '00001214850996sp@al.educacao.sp.gov.br' },
+                    { num: 23, nome: 'MARIA CLARA DE SOUZA LOPES', ra: '123001171', dig: '7', email: '00001230011717sp@al.educacao.sp.gov.br' },
+                    { num: 26, nome: 'MIQUEIAS DEL VALLE ISAIAS MAGALHAES', ra: '116518294', dig: '4', email: '00001165182944sp@al.educacao.sp.gov.br' },
+                    { num: 27, nome: 'MIQUEIAS PAULINO SILVA', ra: '115068338', dig: '7', email: '00001150683387SP@al.educacao.sp.gov.br' },
+                    { num: 28, nome: 'NATAN CASTRO DE CARVALHO', ra: '121304940', dig: '4', email: '00001213049404sp@al.educacao.sp.gov.br' },
+                    { num: 29, nome: 'NICOLLE MARQUES DA SILVA', ra: '122359539', dig: '0', email: '00001223595390SP@al.educacao.sp.gov.br' },
+                    { num: 32, nome: 'PIETTRO SORRILHA SOUZA', ra: '121481465', dig: '7', email: '00001214814657SP@al.educacao.sp.gov.br' },
+                    { num: 33, nome: 'RAFAELA FARIA SILVA', ra: '121858589', dig: '4', email: '00001218585894sp@al.educacao.sp.gov.br' },
+                    { num: 34, nome: 'SOFIA GOMES DANTAS', ra: '122357965', dig: '7', email: '00001223579657sp@al.educacao.sp.gov.br' },
+                    { num: 35, nome: 'TAYANK ROBER LIMACHI CHOQUE', ra: '115890916', dig: '0', email: '00001158909160sp@al.educacao.sp.gov.br' },
+                    { num: 37, nome: 'VICTOR JUNIOR TENORIO COSTA', ra: '121492763', dig: '4', email: '00001214927634sp@al.educacao.sp.gov.br' },
+                    { num: 39, nome: 'MELISSA DO NASCIMENTO FREITAS', ra: '115887449', dig: '2', email: '00001158874492SP@al.educacao.sp.gov.br' },
+                    { num: 41, nome: 'LUHARA EMANUELLY SILVA FREITAS', ra: '115072488', dig: '2', email: '00001150724882SP@al.educacao.sp.gov.br' },
+                ]
+            };
+
+            // ---------- QUESTÕES (Aulas 1 a 6 - 3º Bimestre - Guia Priorizado - A célula) ----------
+            const questoes = [
+                {
+                    // Aula 1 - Teoria celular / unicelulares e pluricelulares
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
+                    contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida (alimentar-se, respirar e se reproduzir); e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto, cada uma exercendo uma função específica para manter o organismo funcionando. Essa observação é uma aplicação prática da Teoria Celular, segundo a qual a célula é considerada a menor unidade estrutural e funcional dos seres vivos.',
+                    pergunta: 'Com base no texto e na Teoria Celular, os dois organismos observados pela bióloga podem ser classificados corretamente, respectivamente, como:',
+                    img: '<i class="fas fa-microscope"></i> observação de organismos em uma gota de água',
+                    alternativas: ['pluricelular e unicelular', 'unicelular e pluricelular', 'procarionte e eucarionte', 'autótrofo e heterótrofo'], correta: 1
+                },
+                {
+                    // Aula 2 - Desenvolvimento da microscopia
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 2',
+                    contexto: 'No século XVII, o cientista holandês Anton van Leeuwenhoek aperfeiçoou lentes e construiu microscópios artesanais capazes de ampliar imagens centenas de vezes, tornando-se o primeiro a observar e descrever bactérias e outros microrganismos, que ele chamava de "animálculos". Pouco antes dele, o inglês Robert Hooke havia utilizado um microscópio rudimentar para observar fatias finas de cortiça e identificou pequenos compartimentos vazios, que nomeou de "cellulae" (pequenas células), termo que deu origem à palavra "célula", usada até hoje.',
+                    pergunta: 'A invenção e o aperfeiçoamento do microscópio, descritos no texto, foram fundamentais para o desenvolvimento da Biologia porque:',
+                    img: '<i class="fas fa-history"></i> Hooke e Leeuwenhoek: os primeiros microscópios',
+                    alternativas: ['permitiram calcular com exatidão a idade da Terra', 'tornaram possível observar estruturas microscópicas invisíveis a olho nu, como células e microrganismos', 'substituíram definitivamente a necessidade de qualquer outro instrumento científico', 'provaram que todos os seres vivos são formados por uma única célula'], correta: 1
+                },
+                {
+                    // Aula 3 - Estrutura celular básica: membrana, citoplasma, material genético
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 3',
+                    contexto: 'Para explicar a estrutura básica de uma célula, uma professora comparou-a a uma pequena fábrica: a parte mais externa, que controla o que entra e o que sai, funciona como o "portão de segurança"; o espaço interno, gelatinoso, onde ocorrem as principais reações químicas e onde ficam mergulhadas as demais estruturas, funciona como o "chão de fábrica"; e a região que guarda as informações genéticas e comanda todas as atividades da célula funciona como o "escritório central", responsável por dar as ordens.',
+                    pergunta: 'Na comparação feita pela professora, o "portão de segurança", o "chão de fábrica" e o "escritório central" representam, respectivamente, os seguintes componentes celulares:',
+                    img: '<i class="fas fa-industry"></i> a célula comparada a uma fábrica em miniatura',
+                    alternativas: ['núcleo (ou material genético), citoplasma e membrana plasmática', 'citoplasma, membrana plasmática e núcleo (ou material genético)', 'membrana plasmática, citoplasma e núcleo (ou material genético)', 'mitocôndria, citoplasma e parede celular'], correta: 2
+                },
+                {
+                    // Aula 4 - Eucariontes x procariontes
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 4',
+                    contexto: 'Durante uma aula prática, um estudante do 6º ano comparou duas células observadas ao microscópio. Na célula A, o material genético estava disperso diretamente no citoplasma, sem nenhuma membrana o envolvendo. Já na célula B, o material genético estava protegido dentro de uma estrutura arredondada, delimitada por uma membrana própria, chamada núcleo.',
+                    pergunta: 'De acordo com essa diferença na organização do material genético, as células A e B observadas pelo estudante são classificadas, respectivamente, como:',
+                    img: '<i class="fas fa-dna"></i> organização do material genético em duas células diferentes',
+                    alternativas: ['procarionte e eucarionte', 'eucarionte e procarionte', 'vegetal e animal', 'unicelular e pluricelular'], correta: 0
+                },
+                {
+                    // Aula 5 - Célula animal / mitocôndria
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 5',
+                    contexto: 'Durante uma corrida de 100 metros, as células musculares das pernas de um atleta precisam produzir, em poucos segundos, uma grande quantidade de energia para permitir a contração muscular. Essa energia é obtida por meio de um processo chamado respiração celular, realizado por organelas específicas presentes nas células animais e que costumam ser chamadas de "usinas de energia" da célula.',
+                    pergunta: 'A organela citada no texto, responsável por produzir a energia utilizada pelas células musculares do atleta, é:',
+                    img: '<i class="fas fa-running"></i> + <i class="fas fa-bolt"></i> energia para a contração muscular',
+                    alternativas: ['o núcleo', 'o ribossomo', 'a mitocôndria', 'o vacúolo'], correta: 2
+                },
+                {
+                    // Aula 6 - Célula vegetal / cloroplasto / fotossíntese
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 6',
+                    contexto: 'Uma folha exposta à luz do sol realiza um processo no qual capta a energia luminosa e a transforma em energia química, produzindo glicose (que serve de alimento para a planta) e liberando oxigênio para a atmosfera. Esse processo ocorre em organelas de cor verde, exclusivas das células vegetais, que contêm um pigmento chamado clorofila, responsável por absorver a luz solar.',
+                    pergunta: 'As organelas responsáveis pelo processo descrito no texto, exclusivas das células vegetais, são:',
+                    img: '<i class="fas fa-leaf"></i> + <i class="fas fa-sun"></i> a folha captando luz solar',
+                    alternativas: ['os cloroplastos', 'as mitocôndrias', 'os vacúolos', 'os ribossomos'], correta: 0
+                },
+                {
+                    // Aula 5 + 6 - comparação célula animal x vegetal
+                    tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
+                    contexto: 'Para uma feira de ciências, um grupo de alunos montou uma maquete de célula com formato irregular, sem nenhuma estrutura rígida ao redor da membrana e com pequenos vacúolos espalhados pelo citoplasma. Outro grupo montou uma maquete de célula com formato retangular fixo, apresentando uma estrutura rígida envolvendo a membrana plasmática por fora e um grande vacúolo central, que ocupava a maior parte do espaço interno da célula.',
+                    pergunta: 'Considerando as estruturas descritas em cada maquete, os dois grupos representaram, respectivamente, células do tipo:',
+                    img: '<i class="fas fa-shapes"></i> duas maquetes de células com formatos diferentes',
+                    alternativas: ['vegetal e animal', 'animal e vegetal', 'procarionte e eucarionte', 'bacteriana e fúngica'], correta: 1
+                },
+                {
+                    // Discursiva - Aula 1
+                    tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aula 1',
+                    contexto: 'Retome o que foi estudado sobre a Teoria Celular e a classificação dos seres vivos quanto ao número de células.',
+                    pergunta: 'Explique, com suas palavras, a diferença entre seres vivos unicelulares e pluricelulares. Em seguida, cite um exemplo de cada tipo, usando organismos estudados em sala de aula ou do seu dia a dia.',
+                    img: '<i class="fas fa-bacterium"></i> + <i class="fas fa-paw"></i> seres formados por uma ou várias células'
+                },
+                {
+                    // Discursiva - Aulas 5 e 6
+                    tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
+                    contexto: 'Pense em tudo o que você aprendeu sobre as estruturas presentes na célula animal e na célula vegetal.',
+                    pergunta: 'Compare a célula animal e a célula vegetal, citando pelo menos duas estruturas que existem na célula vegetal, mas não existem na célula animal. Em seguida, explique a função de uma dessas estruturas.',
+                    img: '<i class="fas fa-seedling"></i> + <i class="fas fa-otter"></i> célula vegetal e célula animal'
+                },
+                {
+                    // Discursiva - Aula 2
+                    tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aula 2',
+                    contexto: 'Imagine que o microscópio nunca tivesse sido inventado.',
+                    pergunta: 'Explique, com base no que você aprendeu sobre o desenvolvimento da microscopia, por que esse instrumento foi tão importante para a descoberta da célula e para o avanço da Biologia. Em sua resposta, imagine e descreva como seria o conhecimento científico sobre os seres vivos sem esse instrumento.',
+                    img: '<i class="fas fa-flask"></i> ciência antes e depois do microscópio'
+                }
+            ];
+
+            // ---------- VUE ----------
+            new Vue({
+                el: '#app',
+                data: {
+                    turmaSelecionada: '',
+                    alunoSelecionado: null,
+                    numeroChamada: '',
+                    raAluno: '',
+                    emailAluno: '',
+                    dataAtividade: '',
+                    alunosFiltrados: [],
+                    questoes: questoes,
+                    enviando: false,
+                    // URL do Aplicativo da Web (Web App) do Google Apps Script
+                    webAppUrl: 'https://script.google.com/macros/s/AKfycbwCysLwHYbk3Qiul-dn0TwhkRgP5CYtK8SoI365kICOz_cOo5nX7hmeGiQR26AYkC9V/exec',
+                    respostas: questoes.map(q => {
+                        if (q.tipo === 'obj') {
+                            return { tipo: 'obj', escolha: null };
+                        } else {
+                            return { tipo: 'dis', texto: '' };
+                        }
+                    })
+                },
+                mounted() {
+                    // Data automática (dia em que o aluno está respondendo)
+                    this.dataAtividade = new Date().toLocaleDateString('pt-BR');
+
+                    // Carregar dados salvos localmente (rascunho)
+                    const saved = localStorage.getItem('respostas_ciencias_6ano_lydia_3bim_celula');
+                    if (saved) {
+                        try {
+                            const parsed = JSON.parse(saved);
+                            this.turmaSelecionada = parsed.turma || '';
+                            this.filtrarAlunos();
+                            this.alunoSelecionado = parsed.aluno || null;
+                            this.preencherDados();
+                            if (parsed.respostas) {
+                                parsed.respostas.forEach((r, i) => {
+                                    if (this.respostas[i]) {
+                                        this.respostas[i].escolha = r.escolha;
+                                        this.respostas[i].texto = r.texto;
+                                    }
+                                });
+                            }
+                        } catch (e) {
+                            console.error("Erro ao carregar cache local", e);
+                        }
+                    }
+                },
+                watch: {
+                    respostas: {
+                        deep: true,
+                        handler() {
+                            this.salvarContextoLocal();
+                        }
+                    },
+                    turmaSelecionada() { this.salvarContextoLocal(); },
+                    alunoSelecionado() { this.salvarContextoLocal(); }
+                },
+                methods: {
+                    salvarContextoLocal() {
+                        const data = {
+                            turma: this.turmaSelecionada,
+                            aluno: this.alunoSelecionado,
+                            respostas: this.respostas
+                        };
+                        localStorage.setItem('respostas_ciencias_6ano_lydia_3bim_celula', JSON.stringify(data));
+                    },
+                    filtrarAlunos() {
+                        this.alunosFiltrados = this.turmaSelecionada ? alunosData[this.turmaSelecionada] : [];
+                        this.alunoSelecionado = null;
+                        this.numeroChamada = '';
+                        this.raAluno = '';
+                        this.emailAluno = '';
+                    },
+                    preencherDados() {
+                        if (this.alunoSelecionado) {
+                            this.numeroChamada = this.alunoSelecionado.num;
+                            this.raAluno = this.alunoSelecionado.ra + '-' + this.alunoSelecionado.dig;
+                            this.emailAluno = this.alunoSelecionado.email || '(e-mail não cadastrado)';
+                        } else {
+                            this.numeroChamada = '';
+                            this.raAluno = '';
+                            this.emailAluno = '';
+                        }
+                    },
+                    enviarRespostas() {
+                        if (!this.turmaSelecionada || !this.alunoSelecionado) {
+                            alert('Por favor, selecione primeiro a turma e depois o seu nome na lista.');
+                            return;
+                        }
+
+                        if (!this.webAppUrl) {
+                            const url = prompt("Para enviar, preciso da 'URL do Aplicativo da Web' do seu Google Apps Script.\n\nCole a URL aqui (ex: https://script.google.com/.../exec):");
+                            if (!url) return;
+                            this.webAppUrl = url;
+                        }
+
+                        this.enviando = true;
+
+                        const payload = {
+                            timestamp: new Date().toLocaleString('pt-BR'),
+                            data: this.dataAtividade,
+                            escola: 'Lydia',
+                            turma: '6ºAno ' + this.turmaSelecionada,
+                            aluno: this.alunoSelecionado.nome,
+                            numero: this.numeroChamada,
+                            ra: this.raAluno,
+                            email: this.emailAluno,
+                            respostas: this.respostas.map((r, idx) => {
+                                if (r.tipo === 'obj') {
+                                    return {
+                                        questao: idx + 1,
+                                        tipo: 'ME',
+                                        resposta: r.escolha !== null ? this.questoes[idx].alternativas[r.escolha] : '(não respondida)'
+                                    };
+                                } else {
+                                    return {
+                                        questao: idx + 1,
+                                        tipo: 'DIS',
+                                        resposta: r.texto || '(em branco)'
+                                    };
+                                }
+                            })
+                        };
+
+                        fetch(this.webAppUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(payload)
+                        })
+                            .then(() => {
+                                alert('✅ Sucesso! Suas respostas foram enviadas para correção por IA e gravadas na planilha.\n\nVerifique a aba "6ºAno (Célula)".');
+                                this.excluirRespostasSilencioso();
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert('❌ Erro ao enviar para o Google Sheets. Verifique sua conexão ou a URL do script.');
+                            })
+                            .finally(() => {
+                                this.enviando = false;
+                            });
+                    },
+                    excluirRespostas() {
+                        if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
+                            this.excluirRespostasSilencioso();
+                            alert('Todas as respostas foram excluídas.');
+                        }
+                    },
+                    excluirRespostasSilencioso() {
+                        this.respostas = this.questoes.map(q => {
+                            if (q.tipo === 'obj') {
+                                return { tipo: 'obj', escolha: null };
+                            } else {
+                                return { tipo: 'dis', texto: '' };
+                            }
+                        });
+                        localStorage.removeItem('respostas_ciencias_6ano_lydia_3bim_celula');
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>
