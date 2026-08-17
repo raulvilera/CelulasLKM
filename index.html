@@ -278,6 +278,108 @@
             color: #9a6a3b;
         }
 
+        .img-placeholder img {
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .img-placeholder img:hover,
+        .img-placeholder img:focus-visible {
+            transform: scale(1.015);
+            box-shadow: 0 6px 18px rgba(0, 20, 50, 0.2);
+            outline: 3px solid #ffb347;
+            outline-offset: 3px;
+        }
+
+        .image-zoom-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            background: rgba(5, 20, 38, 0.88);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .image-zoom-modal.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .image-zoom-dialog {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            max-width: 96vw;
+            max-height: 94vh;
+        }
+
+        .image-zoom-dialog img {
+            display: block;
+            max-width: 94vw;
+            max-height: 84vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+            cursor: zoom-out;
+        }
+
+        .image-zoom-caption {
+            max-width: 90vw;
+            color: #ffffff;
+            text-align: center;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .image-zoom-close {
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            width: 44px;
+            height: 44px;
+            border: 2px solid #ffb347;
+            border-radius: 50%;
+            background: #113a5e;
+            color: #ffffff;
+            font-size: 1.8rem;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0a1f30;
+        }
+
+        .image-zoom-close:hover,
+        .image-zoom-close:focus-visible {
+            background: #1a5685;
+            outline: 3px solid #ffffff;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 700px) {
+            .image-zoom-modal {
+                padding: 18px;
+            }
+
+            .image-zoom-dialog img {
+                max-width: 94vw;
+                max-height: 78vh;
+            }
+
+            .image-zoom-close {
+                top: -14px;
+                right: -8px;
+            }
+        }
+
         .submit-area {
             text-align: center;
             margin: 40px 0 10px;
@@ -419,6 +521,15 @@
         <div class="footer-note">
             <i class="fas fa-robot"></i> respostas discursivas serão corrigidas por IA automaticamente • planilha:
             aba "6ºAno (Célula)"
+        </div>
+    </div>
+
+    <div id="imageZoomModal" class="image-zoom-modal" role="dialog" aria-modal="true"
+        aria-labelledby="imageZoomCaption" aria-hidden="true">
+        <div class="image-zoom-dialog">
+            <button id="imageZoomClose" class="image-zoom-close" type="button" aria-label="Fechar imagem ampliada">&times;</button>
+            <img id="imageZoomed" src="" alt="">
+            <p id="imageZoomCaption" class="image-zoom-caption"></p>
         </div>
     </div>
 
@@ -763,6 +874,69 @@
                     }
                 }
             });
+        })();
+        </script>
+    <script>
+        (function () {
+            const modal = document.getElementById('imageZoomModal');
+            const zoomedImage = document.getElementById('imageZoomed');
+            const zoomCaption = document.getElementById('imageZoomCaption');
+            const closeButton = document.getElementById('imageZoomClose');
+            let lastFocusedImage = null;
+
+            function openImage(image) {
+                lastFocusedImage = image;
+                zoomedImage.src = image.currentSrc || image.src;
+                zoomedImage.alt = image.alt || 'Imagem ampliada';
+                const figure = image.closest('figure');
+                const caption = figure ? figure.querySelector('figcaption') : null;
+                zoomCaption.textContent = caption ? caption.textContent.trim() : (image.alt || '');
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                closeButton.focus();
+            }
+
+            function closeImage() {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                zoomedImage.removeAttribute('src');
+                if (lastFocusedImage) {
+                    lastFocusedImage.focus();
+                }
+            }
+
+            document.querySelectorAll('.img-placeholder img').forEach(function (image) {
+                image.setAttribute('role', 'button');
+                image.setAttribute('tabindex', '0');
+                image.setAttribute('title', 'Clique para ampliar a imagem');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!(event.target instanceof Element)) return;
+                const image = event.target.closest('.img-placeholder img');
+                if (image) {
+                    openImage(image);
+                } else if (event.target === modal || event.target === zoomedImage) {
+                    closeImage();
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+                    closeImage();
+                    return;
+                }
+
+                if ((event.key === 'Enter' || event.key === ' ') &&
+                    document.activeElement && document.activeElement.matches('.img-placeholder img')) {
+                    event.preventDefault();
+                    openImage(document.activeElement);
+                }
+            });
+
+            closeButton.addEventListener('click', closeImage);
         })();
     </script>
 </body>
