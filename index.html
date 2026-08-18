@@ -47,7 +47,7 @@
             margin-bottom: 25px;
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 20px 20px;
             align-items: center;
             border: 1px solid #bdd3f0;
         }
@@ -271,6 +271,19 @@
             gap: 12px;
             border: 1px dashed #ffb347;
             text-align: center;
+            flex-direction: column;
+        }
+
+        .img-placeholder img {
+            max-width: 100%;
+            max-height: 260px;
+            border-radius: 14px;
+            display: block;
+        }
+
+        .img-placeholder .img-caption {
+            font-size: 0.85rem;
+            color: #1a4b79;
         }
 
         .img-placeholder i {
@@ -333,27 +346,31 @@
             padding-top: 15px;
         }
 
-        .error-message, .success-message {
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px 0;
-            display: none;
-            font-size: 1.05rem;
-        }
-
         .error-message {
             background: #f8d7da;
             border: 1px solid #f5c6cb;
             color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
         }
 
         .success-message {
             background: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
         }
 
-        .error-message.show, .success-message.show {
+        .success-message.show {
             display: block;
         }
     </style>
@@ -376,7 +393,7 @@
             <div class="info-group">
                 <label><i class="fas fa-user-graduate"></i> Nome:</label>
                 <select v-model="alunoSelecionado" @change="preencherDados" :disabled="!turmaSelecionada">
-                    <option :value="null">{{ turmaSelecionada ? '-- escolha seu nome --' : 'selecione a turma primeiro' }}</option>
+                    <option :value="null">{{ turmaSelecionada ? '-- escolha --' : 'selecione a turma primeiro' }}</option>
                     <option v-for="a in alunosFiltrados" :key="a.email" :value="a">{{ a.nome }}</option>
                 </select>
             </div>
@@ -397,7 +414,7 @@
                 <input type="text" v-model="dataAtividade" readonly>
             </div>
             <div class="hint-turma-primeiro" v-if="!turmaSelecionada">
-                <i class="fas fa-info-circle"></i> Selecione primeiro a sua <strong>turma</strong> para carregar a lista de alunos.
+                <i class="fas fa-info-circle"></i> Selecione primeiro a sua <strong>turma</strong> para que a lista com os nomes dos alunos apareça no campo "Nome".
             </div>
         </div>
 
@@ -436,27 +453,28 @@
 
             <div v-else class="discursive-box">
                 <textarea rows="4" v-model="respostas[idx].texto"
-                    placeholder="Digite sua resposta completa aqui..."></textarea>
+                    placeholder="Digite sua resposta (será avaliada por IA)..."></textarea>
             </div>
         </div>
 
         <div class="submit-area">
             <button class="btn btn-submit" @click="enviarRespostas" :disabled="enviando">
-                <i class="fas" :class="enviando ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
-                {{ enviando ? 'ENVIANDO...' : 'ENVIAR RESPOSTAS' }}
+                <i class="fas" :class="enviando ? 'fa-spinner fa-spin' : 'fa-cloud-upload-alt'"></i>
+                {{ enviando ? 'ENVIANDO E CORRIGINDO...' : 'ENVIAR' }}
             </button>
-            <button class="btn btn-delete" @click="excluirRespostas" :disabled="enviando">
-                <i class="fas fa-trash-alt"></i> LIMPAR
-            </button>
+            <button class="btn btn-delete" @click="excluirRespostas" :disabled="enviando"><i
+                    class="fas fa-trash-alt"></i> EXCLUIR</button>
         </div>
         <div class="footer-note">
-            <i class="fas fa-check-circle"></i> As respostas serão gravadas diretamente na planilha oficial da turma.
+            <i class="fas fa-robot"></i> respostas discursivas serão corrigidas por IA automaticamente • planilha:
+            aba "6ºAno (Célula)"
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         (function () {
+            // ---------- DADOS DOS ALUNOS ----------
             const alunosData = {
                 A: [
                     { num: 1, nome: 'ANA CHRYSTINA TIEKO DA PAIXAO', ra: '115865039', dig: '5', email: '00001158650395SP@al.educacao.sp.gov.br' },
@@ -487,7 +505,7 @@
                     { num: 31, nome: 'RIQUELME SOTERO RODRIGUES', ra: '123013870', dig: '5', email: '00001230138705SP@al.educacao.sp.gov.br' },
                     { num: 32, nome: 'SOPHIA GIOVANA OLIVEIRA ALVES', ra: '116521364', dig: '3', email: '00001165213643SP@al.educacao.sp.gov.br' },
                     { num: 33, nome: 'VINICIUS BESERRA ARAUJO', ra: '115067918', dig: '9', email: '00001150679189SP@al.educacao.sp.gov.br' },
-                    { num: 34, nome: 'VINICIUS RIBEIRO AMARAL ABRAHAO', ra: '116522317', dig: 'X', email: '0000116522317XSP@al.educacao.sp.gov.br' }
+                    { num: 34, nome: 'VINICIUS RIBEIRO AMARAL ABRAHAO', ra: '116522317', dig: 'X', email: '0000116522317XSP@al.educacao.sp.gov.br' },
                 ],
                 B: [
                     { num: 2, nome: 'ANA CLARA BATISTA BRITO', ra: '114693372', dig: '1', email: '00001146933721SP@al.educacao.sp.gov.br' },
@@ -517,7 +535,7 @@
                     { num: 39, nome: 'WILLIAM ALVES CORAZZA', ra: '116522772', dig: '1', email: '00001165227721SP@al.educacao.sp.gov.br' },
                     { num: 40, nome: 'MANUELA ELI DOS SANTOS SILVA', ra: '115886193', dig: 'X', email: '0000115886193xsp@al.educacao.sp.gov.br' },
                     { num: 41, nome: 'DAVI HENRIQUE SILVA DE MELO', ra: '115877906', dig: '9', email: '00001158779069SP@al.educacao.sp.gov.br' },
-                    { num: 42, nome: 'EVELYN LORRANNY SANTOS OLIVEIRA', ra: '116503639', dig: '3', email: '00001165036393sp@al.educacao.sp.gov.br' }
+                    { num: 42, nome: 'EVELYN LORRANNY SANTOS OLIVEIRA', ra: '116503639', dig: '3', email: '00001165036393sp@al.educacao.sp.gov.br' },
                 ],
                 C: [
                     { num: 1, nome: 'AMANDA MENDES DE SOUZA JOSÉ', ra: '120385412', dig: '2', email: '00001203854122SP@al.educacao.sp.gov.br' },
@@ -548,80 +566,82 @@
                     { num: 35, nome: 'TAYANK ROBER LIMACHI CHOQUE', ra: '115890916', dig: '0', email: '00001158909160sp@al.educacao.sp.gov.br' },
                     { num: 37, nome: 'VICTOR JUNIOR TENORIO COSTA', ra: '121492763', dig: '4', email: '00001214927634sp@al.educacao.sp.gov.br' },
                     { num: 39, nome: 'MELISSA DO NASCIMENTO FREITAS', ra: '115887449', dig: '2', email: '00001158874492SP@al.educacao.sp.gov.br' },
-                    { num: 41, nome: 'LUHARA EMANUELLY SILVA FREITAS', ra: '115072488', dig: '2', email: '00001150724882SP@al.educacao.sp.gov.br' }
+                    { num: 41, nome: 'LUHARA EMANUELLY SILVA FREITAS', ra: '115072488', dig: '2', email: '00001150724882SP@al.educacao.sp.gov.br' },
                 ]
             };
 
+            // ---------- QUESTÕES ----------
             const questoes = [
-                {
+                 {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
-                    contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida (alimentar-se, respirar e se reproduzir); e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto.',
-                    pergunta: 'Com base no texto e na Teoria Celular, os dois organismos observados podem ser classificados corretamente como:',
-                    img: '<i class="fas fa-microscope"></i> Observação ao microscópio',
-                    alternativas: ['pluricelular e unicelular', 'unicelular e pluricelular', 'procarionte e eucarionte', 'autótrofo e heterótrofo']
+                    contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida (alimentar-se, respirar e se reproduzir); e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto, cada uma exercendo uma função específica para manter o organismo funcionando. Essa observação é uma aplicação prática da Teoria Celular, segundo a qual a célula é considerada a menor unidade estrutural e funcional dos seres vivos.',
+                    pergunta: 'Com base no texto e na Teoria Celular, os dois organismos observados pela bióloga podem ser classificados corretamente, respectivamente, como:',
+                    img: '<i class="fas fa-microscope"></i> observação de organismos em uma gota de água',
+                    alternativas: ['pluricelular e unicelular', 'unicelular e pluricelular', 'procarionte e eucarionte', 'autótrofo e heterótrofo'], correta: 1
                 },
-                {
+                   {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 2',
-                    contexto: 'No século XVII, Anton van Leeuwenhoek e Robert Hooke utilizaram microscópios para observar microrganismos e fatias de cortiça, identificando estruturas microscópicas.',
-                    pergunta: 'A invenção e o aperfeiçoamento do microscópio foram fundamentais para o desenvolvimento da Biologia porque:',
-                    img: '<i class="fas fa-history"></i> Primeiros microscópios',
-                    alternativas: ['permitiram calcular a idade da Terra', 'tornaram possível observar estruturas invisíveis a olho nu, como células e microrganismos', 'substituíram a necessidade de outros instrumentos', 'provaram que todos os seres vivos possuem apenas uma célula']
+                    contexto: 'No século XVII, o cientista holandês Anton van Leeuwenhoek aperfeiçoou lentes e construiu microscópios artesanais capazes de ampliar imagens centenas de vezes, tornando-se o primeiro a observar e descrever bactérias e outros microrganismos, que ele chamava de "animálculos". Pouco antes dele, o inglês Robert Hooke havia utilizado um microscópio rudimentar para observar fatias finas de cortiça e identificou pequenos compartimentos vazios, que nomeou de "cellulae" (pequenas células), termo que deu origem à palavra "célula", usada até hoje.',
+                    pergunta: 'A invenção e o aperfeiçoamento do microscópio, descritos no texto, foram fundamentais para o desenvolvimento da Biologia porque:',
+                    img: '<i class="fas fa-history"></i> Hooke e Leeuwenhoek: os primeiros microscópios',
+                    alternativas: ['permitiram calcular com exatidão a idade da Terra', 'tornaram possível observar estruturas microscópicas invisíveis a olho nu, como células e microrganismos', 'substituíram definitivamente a necessidade de qualquer outro instrumento científico', 'provaram que todos os seres vivos são formados por uma única célula'], correta: 1
                 },
-                {
+              {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 3',
-                    contexto: 'Uma professora comparou a célula a uma fábrica: portão de segurança (controla entradas/saídas), chão de fábrica (espaço gelatinoso) e escritório central (guarda informações e comanda).',
-                    pergunta: 'Esses componentes correspondem, respectivamente, a:',
-                    img: '<i class="fas fa-industry"></i> Analogia da célula',
-                    alternativas: ['núcleo, citoplasma e membrana plasmática', 'citoplasma, membrana plasmática e núcleo', 'membrana plasmática, citoplasma e núcleo (ou material genético)', 'mitocôndria, citoplasma e parede celular']
+                    contexto: 'Para explicar a estrutura básica de uma célula, uma professora comparou-a a uma pequena fábrica: a parte mais externa, que controla o que entra e o que sai, funciona como o "portão de segurança"; o espaço interno, gelatinoso, onde ocorrem as principais reações químicas e onde ficam mergulhadas as demais estruturas, funciona como o "chão de fábrica"; e a região que guarda as informações genéticas e comanda todas as atividades da célula funciona como o "escritório central", responsável por dar as ordens.',
+                    pergunta: 'Na comparação feita pela professora, o "portão de segurança", o "chão de fábrica" e o "escritório central" representam, respectivamente, os seguintes componentes celulares:',
+                    img: '<i class="fas fa-industry"></i> a célula comparada a uma fábrica em miniatura',
+                    alternativas: ['núcleo (ou material genético), citoplasma e membrana plasmática', 'citoplasma, membrana plasmática e núcleo (ou material genético)', 'membrana plasmática, citoplasma e núcleo (ou material genético)', 'mitocôndria, citoplasma e parede celular'], correta: 2
                 },
                 {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 4',
-                    contexto: 'Na célula A, o material genético está disperso no citoplasma. Na célula B, o material genético está protegido dentro de um núcleo delimitado por membrana.',
-                    pergunta: 'As células A e B são classificadas, respectivamente, como:',
-                    img: '<i class="fas fa-dna"></i> Tipos celulares',
-                    alternativas: ['procarionte e eucarionte', 'eucarionte e procarionte', 'vegetal e animal', 'unicelular e pluricelular']
+                    contexto: 'Durante uma aula prática, um estudante do 6º ano comparou duas células observadas ao microscópio. Na célula A, o material genético estava disperso diretamente no citoplasma, sem nenhuma membrana o envolvendo. Já na célula B, o material genético estava protegido dentro de uma estrutura arredondada, delimitada por uma membrana própria, chamada núcleo.',
+                    pergunta: 'De acordo com essa diferença na organização do material genético, as células A e B observadas pelo estudante são classificadas, respectivamente, como:',
+                    img: '<i class="fas fa-dna"></i> organização do material genético em duas células diferentes',
+                    alternativas: ['procarionte e eucarionte', 'eucarionte e procarionte', 'vegetal e animal', 'unicelular e pluricelular'], correta: 0
                 },
-                {
+               {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 5',
-                    contexto: 'Durante uma corrida, as células musculares realizam respiração celular através de organelas conhecidas como usinas de energia da célula.',
-                    pergunta: 'A organela responsável por essa produção de energia é:',
-                    img: '<i class="fas fa-bolt"></i> Energia celular',
-                    alternativas: ['o núcleo', 'o ribossomo', 'a mitocôndria', 'o vacúolo']
+                    contexto: 'Durante uma corrida de 100 metros, as células musculares das pernas de um atleta precisam produzir, em poucos segundos, uma grande quantidade de energia para permitir a contração muscular. Essa energia é obtida por meio de um processo chamado respiração celular, realizado por organelas específicas presentes nas células animais e que costumam ser chamadas de "usinas de energia" da célula.',
+                    pergunta: 'A organela citada no texto, responsável por produzir a energia utilizada pelas células musculares do atleta, é:',
+                    img: '<i class="fas fa-running"></i> + <i class="fas fa-bolt"></i> energia para a contração muscular',
+                    alternativas: ['o núcleo', 'o ribossomo', 'a mitocôndria', 'o vacúolo'], correta: 2
                 },
-                {
+                  {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 6',
-                    contexto: 'Uma folha realiza fotossíntese utilizando organelas de cor verde exclusivas das células vegetais, que contêm clorofila.',
-                    pergunta: 'Essas organelas são:',
-                    img: '<i class="fas fa-leaf"></i> Célula vegetal',
-                    alternativas: ['os cloroplastos', 'as mitocôndrias', 'os vacúolos', 'os ribossomos']
+                    contexto: 'Uma folha exposta à luz do sol realiza um processo no qual capta a energia luminosa e a transforma em energia química, produzindo glicose (que serve de alimento para a planta) e liberando oxigênio para a atmosfera. Esse processo ocorre em organelas de cor verde, exclusivas das células vegetais, que contêm um pigmento chamado clorofila, responsável por absorver a luz solar.',
+                    pergunta: 'As organelas responsáveis pelo processo descrito no texto, exclusivas das células vegetais, são:',
+                    img: '<i class="fas fa-leaf"></i> + <i class="fas fa-sun"></i> a folha captando luz solar',
+                    alternativas: ['os cloroplastos', 'as mitocôndrias', 'os vacúolos', 'os ribossomos'], correta: 0
                 },
-                {
+                     {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
-                    contexto: 'Maquete 1: formato irregular, sem parede celular rígida e com pequenos vacúolos. Maquete 2: formato fixo, com parede celular rígida externa e grande vacúolo central.',
-                    pergunta: 'As maquetes representam, respectivamente, células:',
-                    img: '<i class="fas fa-shapes"></i> Estruturas celulares',
-                    alternativas: ['vegetal e animal', 'animal e vegetal', 'procarionte e eucarionte', 'bacteriana e fúngica']
+                    contexto: 'Para uma feira de ciências, um grupo de alunos montou uma maquete de célula com formato irregular, sem nenhuma estrutura rígida ao redor da membrana e com pequenos vacúolos espalhados pelo citoplasma. Outro grupo montou uma maquete de célula com formato retangular fixo, apresentando uma estrutura rígida envolvendo a membrana plasmática por fora e um grande vacúolo central, que ocupava a maior parte do espaço interno da célula.',
+                    pergunta: 'Considerando as estruturas descritas em cada maquete, os dois grupos representaram, respectivamente, células do tipo:',
+                    img: '<i class="fas fa-shapes"></i> duas maquetes de células com formatos diferentes',
+                    alternativas: ['vegetal e animal', 'animal e vegetal', 'procarionte e eucarionte', 'bacteriana e fúngica'], correta: 1
                 },
-                {
+                   {
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aula 1',
-                    contexto: 'Teoria Celular e classificação dos seres vivos.',
-                    pergunta: 'Explique a diferença entre seres unicelulares e pluricelulares e cite um exemplo de cada um.',
-                    img: '<i class="fas fa-bacterium"></i> Organização celular'
+                    contexto: 'Retome o que foi estudado sobre a Teoria Celular e a classificação dos seres vivos quanto ao número de células.',
+                    pergunta: 'Explique, com suas palavras, a diferença entre seres vivos unicelulares e pluricelulares. Em seguida, cite um exemplo de cada tipo, usando organismos estudados em sala de aula ou do seu dia a dia.',
+                    img: '<i class="fas fa-bacterium"></i> + <i class="fas fa-paw"></i> seres formados por uma ou várias células'
                 },
-                {
+                  {
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
-                    contexto: 'Estruturas da célula animal vs célula vegetal.',
-                    pergunta: 'Cite duas estruturas presentes na célula vegetal que não existem na célula animal e explique a função de uma delas.',
-                    img: '<i class="fas fa-seedling"></i> Comparação vegetal x animal'
+                    contexto: 'Pense em tudo o que você aprendeu sobre as estruturas presentes na célula animal e na célula vegetal.',
+                    pergunta: 'Compare a célula animal e a célula vegetal, citando pelo menos duas estruturas que existem na célula vegetal, mas não existem na célula animal. Em seguida, explique a função de uma dessas estruturas.',
+                    img: '<i class="fas fa-seedling"></i> + <i class="fas fa-otter"></i> célula vegetal e célula animal'
                 },
                 {
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aula 2',
-                    contexto: 'História da ciência e microscopia.',
-                    pergunta: 'Por que o microscópio foi fundamental para a descoberta da célula e avanço da Biologia?',
-                    img: '<i class="fas fa-flask"></i> Avanço científico'
+                    contexto: 'Imagine que o microscópio nunca tivesse sido inventado.',
+                    pergunta: 'Explique, com base no que você aprendeu sobre o desenvolvimento da microscopia, por que esse instrumento foi tão importante para a descoberta da célula e para o avanço da Biologia. Em sua resposta, imagine e descreva como seria o conhecimento científico sobre os seres vivos sem esse instrumento.',
+                    img: '<i class="fas fa-flask"></i> ciência antes e depois do microscópio'
                 }
             ];
 
+            // ---------- VUE APP ----------
             new Vue({
                 el: '#app',
                 data: {
@@ -638,16 +658,60 @@
                     mostrarSucesso: false,
                     mensagemErro: '',
                     mensagemSucesso: '',
-                    
-                    // URL da implantação do Google Apps Script
-                    webAppUrl: 'https://script.google.com/macros/s/AKfycbykWJdTtORg18ulhDCpsYXrozoD1NjFIVyGxFEtU3Q3axTUY5LqxG-pzzhSK7jHktrL/exec',
-                    
-                    respostas: questoes.map(q => q.tipo === 'obj' ? { tipo: 'obj', escolha: null } : { tipo: 'dis', texto: '' })
+                    // ✅ ATUALIZE ESTA URL COM A URL DO SEU APPS SCRIPT
+                    webAppUrl: 'https://script.google.com/macros/s/AKfycbwODrckdYB9nTIH06lWxWijr-z7eeb6k7qwb7p6woTLmiplzQ04SNB0YS-FPtNZWb3w/exec',
+                    respostas: questoes.map(q => {
+                        if (q.tipo === 'obj') {
+                            return { tipo: 'obj', escolha: null };
+                        } else {
+                            return { tipo: 'dis', texto: '' };
+                        }
+                    })
                 },
                 mounted() {
                     this.dataAtividade = new Date().toLocaleDateString('pt-BR');
+
+                    // Carregar dados salvos localmente (rascunho)
+                    const saved = localStorage.getItem('respostas_ciencias_6ano_lydia_3bim_celula');
+                    if (saved) {
+                        try {
+                            const parsed = JSON.parse(saved);
+                            this.turmaSelecionada = parsed.turma || '';
+                            this.filtrarAlunos();
+                            this.alunoSelecionado = parsed.aluno || null;
+                            this.preencherDados();
+                            if (parsed.respostas) {
+                                parsed.respostas.forEach((r, i) => {
+                                    if (this.respostas[i]) {
+                                        this.respostas[i].escolha = r.escolha;
+                                        this.respostas[i].texto = r.texto;
+                                    }
+                                });
+                            }
+                        } catch (e) {
+                            console.error("Erro ao carregar cache local", e);
+                        }
+                    }
+                },
+                watch: {
+                    respostas: {
+                        deep: true,
+                        handler() {
+                            this.salvarContextoLocal();
+                        }
+                    },
+                    turmaSelecionada() { this.salvarContextoLocal(); },
+                    alunoSelecionado() { this.salvarContextoLocal(); }
                 },
                 methods: {
+                    salvarContextoLocal() {
+                        const data = {
+                            turma: this.turmaSelecionada,
+                            aluno: this.alunoSelecionado,
+                            respostas: this.respostas
+                        };
+                        localStorage.setItem('respostas_ciencias_6ano_lydia_3bim_celula', JSON.stringify(data));
+                    },
                     filtrarAlunos() {
                         this.alunosFiltrados = this.turmaSelecionada ? alunosData[this.turmaSelecionada] : [];
                         this.alunoSelecionado = null;
@@ -659,82 +723,124 @@
                         if (this.alunoSelecionado) {
                             this.numeroChamada = this.alunoSelecionado.num;
                             this.raAluno = this.alunoSelecionado.ra + '-' + this.alunoSelecionado.dig;
-                            this.emailAluno = this.alunoSelecionado.email;
+                            this.emailAluno = this.alunoSelecionado.email || '(e-mail não cadastrado)';
                         } else {
                             this.numeroChamada = '';
                             this.raAluno = '';
                             this.emailAluno = '';
                         }
                     },
-                    mostrarMensagem(tipo, texto, duracao = 6000) {
+                    mostrarMensagem(tipo, mensagem, duracao = 5000) {
                         if (tipo === 'erro') {
-                            this.mensagemErro = texto;
+                            this.mensagemErro = mensagem;
                             this.mostrarErro = true;
                             setTimeout(() => { this.mostrarErro = false; }, duracao);
-                        } else {
-                            this.mensagemSucesso = texto;
+                        } else if (tipo === 'sucesso') {
+                            this.mensagemSucesso = mensagem;
                             this.mostrarSucesso = true;
                             setTimeout(() => { this.mostrarSucesso = false; }, duracao);
                         }
                     },
                     enviarRespostas() {
+                        // ✅ VALIDAÇÃO 1: Verificar seleção de turma e aluno
                         if (!this.turmaSelecionada || !this.alunoSelecionado) {
-                            this.mostrarMensagem('erro', 'Por favor, selecione sua turma e seu nome.');
+                            this.mostrarMensagem('erro', 'Por favor, selecione a turma e o nome na lista.');
                             return;
                         }
 
-                        const endpoint = (this.webAppUrl || '').trim();
-                        if (!endpoint || !endpoint.endsWith('/exec')) {
-                            this.mostrarMensagem('erro', 'A URL do Google Apps Script precisa terminar em /exec.');
+                        // ✅ VALIDAÇÃO 2: Verificar se tem URL do Apps Script
+                        if (!this.webAppUrl || this.webAppUrl.trim() === '') {
+                            this.mostrarMensagem('erro', 'URL do Apps Script não configurada.');
                             return;
                         }
 
                         this.enviando = true;
 
+                        // ✅ CONSTRUIR PAYLOAD CORRETAMENTE
                         const payload = {
                             timestamp: new Date().toLocaleString('pt-BR'),
                             data: this.dataAtividade,
+                            escola: 'Lydia',
                             turma: '6ºAno ' + this.turmaSelecionada,
                             aluno: this.alunoSelecionado.nome,
                             numero: this.numeroChamada,
                             ra: this.raAluno,
                             email: this.emailAluno,
-                            respostas: this.respostas.map((r, idx) => ({
-                                questao: idx + 1,
-                                tipo: r.tipo === 'obj' ? 'ME' : 'DIS',
-                                resposta: r.tipo === 'obj'
-                                    ? (r.escolha !== null ? this.questoes[idx].alternativas[r.escolha] : '(não respondida)')
-                                    : (r.texto || '(em branco)')
-                            }))
+                            respostas: this.respostas.map((r, idx) => {
+                                if (r.tipo === 'obj') {
+                                    return {
+                                        questao: idx + 1,
+                                        tipo: 'ME',
+                                        resposta: r.escolha !== null ? this.questoes[idx].alternativas[r.escolha] : '(não respondida)'
+                                    };
+                                } else {
+                                    return {
+                                        questao: idx + 1,
+                                        tipo: 'DIS',
+                                        resposta: r.texto || '(em branco)'
+                                    };
+                                }
+                            })
                         };
 
-                        // Envio usando mode: 'no-cors' com Content-Type text/plain para contornar restrições de CORS
-                        fetch(endpoint, {
+                        console.log('📦 Enviando payload:', JSON.stringify(payload, null, 2));
+
+                        // ✅ ENVIAR COM text/plain (contorna erro CORS do GitHub Pages)
+                        fetch(this.webAppUrl, {
                             method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            headers: {
+                                'Content-Type': 'text/plain;charset=utf-8'
+                            },
                             body: JSON.stringify(payload)
                         })
-                        .then(() => {
-                            this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} enviadas para a planilha!`, 8000);
-                            setTimeout(() => { this.excluirRespostasSilencioso(); }, 2000);
-                        })
-                        .catch(err => {
-                            console.error('Erro de envio:', err);
-                            this.mostrarMensagem('erro', '❌ Falha ao enviar para o Google Sheets. Verifique sua conexão ou a URL do script.');
-                        })
-                        .finally(() => {
-                            this.enviando = false;
-                        });
+                            .then(response => {
+                                console.log('📥 Resposta recebida. Status:', response.status);
+                                
+                                if (!response.ok) {
+                                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                                }
+                                
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('✅ Resposta JSON parseada:', data);
+                                
+                                if (data.status === 'success') {
+                                    this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} foram registradas!`, 6000);
+                                    console.log('🎉 Sucesso confirmado!');
+                                    
+                                    // Limpar respostas após sucesso
+                                    setTimeout(() => {
+                                        this.excluirRespostasSilencioso();
+                                    }, 2000);
+                                } else {
+                                    this.mostrarMensagem('erro', `⚠️ ${data.message || 'Erro desconhecido ao processar resposta'}`, 6000);
+                                    console.error('❌ Resposta indicou erro:', data);
+                                }
+                            })
+                            .catch(err => {
+                                console.error('❌ Erro na requisição:', err);
+                                this.mostrarMensagem('erro', `❌ Erro ao enviar: ${err.message}. Verifique a URL do Apps Script.`, 7000);
+                            })
+                            .finally(() => {
+                                this.enviando = false;
+                            });
                     },
                     excluirRespostas() {
                         if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
                             this.excluirRespostasSilencioso();
-                            this.mostrarMensagem('sucesso', 'Respostas limpas com sucesso.', 3000);
+                            this.mostrarMensagem('sucesso', 'Todas as respostas foram excluídas.', 3000);
                         }
                     },
                     excluirRespostasSilencioso() {
-                        this.respostas = this.questoes.map(q => q.tipo === 'obj' ? { tipo: 'obj', escolha: null } : { tipo: 'dis', texto: '' });
+                        this.respostas = this.questoes.map(q => {
+                            if (q.tipo === 'obj') {
+                                return { tipo: 'obj', escolha: null };
+                            } else {
+                                return { tipo: 'dis', texto: '' };
+                            }
+                        });
+                        localStorage.removeItem('respostas_ciencias_6ano_lydia_3bim_celula');
                     }
                 }
             });
