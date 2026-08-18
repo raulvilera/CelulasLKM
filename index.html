@@ -658,7 +658,8 @@
                     mostrarSucesso: false,
                     mensagemErro: '',
                     mensagemSucesso: '',
-                    // ✅ ATUALIZE ESTA URL COM A URL DO SEU APPS SCRIPT (deployment mais recente)
+                    // URL pública da implantação do Google Apps Script (deve terminar em /exec).
+                    // Mantemos essa configuração em um único ponto para evitar URLs antigas.
                     webAppUrl: 'https://script.google.com/macros/s/AKfycbwzc04hE2cKONJwpX8g8MeRykqKLy5EXBdZHUss2TQrHZaFRYYtuVvbmShJVAyqGsPF/exec',
                     respostas: questoes.map(q => {
                         if (q.tipo === 'obj') {
@@ -749,8 +750,18 @@
                         }
 
                         // ✅ VALIDAÇÃO 2: Verificar se tem URL do Apps Script
-                        if (!this.webAppUrl || this.webAppUrl.trim() === '') {
+                        const endpoint = (this.webAppUrl || '').trim();
+                        if (!endpoint) {
                             this.mostrarMensagem('erro', 'URL do Apps Script não configurada.');
+                            return;
+                        }
+                        try {
+                            const endpointUrl = new URL(endpoint);
+                            if (endpointUrl.protocol !== 'https:' || !endpointUrl.pathname.endsWith('/exec')) {
+                                throw new Error('URL inválida');
+                            }
+                        } catch (e) {
+                            this.mostrarMensagem('erro', 'A URL do Apps Script precisa ser HTTPS e terminar em /exec.');
                             return;
                         }
 
@@ -792,21 +803,34 @@
                         // é tratada como "simples" (sem preflight) e o backend continua
                         // funcionando normalmente, pois o doPost() já faz JSON.parse()
                         // do conteúdo bruto, independente do Content-Type declarado.
-                        fetch(this.webAppUrl, {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+                        fetch(endpoint, {
                             method: 'POST',
+                            mode: 'cors',
+                            redirect: 'follow',
+                            cache: 'no-store',
                             headers: {
+                                // text/plain evita preflight OPTIONS no Google Apps Script.
                                 'Content-Type': 'text/plain;charset=utf-8'
                             },
-                            body: JSON.stringify(payload)
+                            body: JSON.stringify(payload),
+                            signal: controller.signal
                         })
-                            .then(response => {
+                            .then(async response => {
                                 console.log('📥 Resposta recebida. Status:', response.status);
+                                const text = await response.text();
 
                                 if (!response.ok) {
-                                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                                    throw new Error(`HTTP ${response.status}: ${text.slice(0, 180) || response.statusText}`);
                                 }
 
-                                return response.json();
+                                try {
+                                    return JSON.parse(text);
+                                } catch (parseError) {
+                                    throw new Error('o Apps Script respondeu em formato inesperado');
+                                }
                             })
                             .then(data => {
                                 console.log('✅ Resposta JSON parseada:', data);
@@ -826,9 +850,13 @@
                             })
                             .catch(err => {
                                 console.error('❌ Erro na requisição:', err);
-                                this.mostrarMensagem('erro', `❌ Erro ao enviar: ${err.message}. Verifique a URL do Apps Script.`, 7000);
+                                const mensagem = err.name === 'AbortError'
+                                    ? 'tempo limite excedido (30 s)'
+                                    : (err.message || 'falha de comunicação');
+                                this.mostrarMensagem('erro', `❌ Não foi possível enviar: ${mensagem}. Confirme se a implantação está como “Qualquer pessoa” e se a URL termina em /exec.`, 9000);
                             })
                             .finally(() => {
+                                clearTimeout(timeoutId);
                                 this.enviando = false;
                             });
                     },
