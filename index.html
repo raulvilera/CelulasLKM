@@ -345,6 +345,34 @@
             border-top: 1px dashed #b3c9e5;
             padding-top: 15px;
         }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
     </style>
 </head>
 
@@ -390,6 +418,14 @@
             </div>
         </div>
 
+        <div class="error-message" :class="{ show: mostrarErro }">
+            <strong>❌ Erro:</strong> {{ mensagemErro }}
+        </div>
+
+        <div class="success-message" :class="{ show: mostrarSucesso }">
+            <strong>✅ Sucesso:</strong> {{ mensagemSucesso }}
+        </div>
+
         <div class="title-activity">ATIVIDADE DE CIÊNCIAS <span
                 style="font-size: 1.3rem; background: #ffe6b3; padding: 0 10px; border-radius: 30px;">3º BIMESTRE</span>
         </div>
@@ -410,7 +446,7 @@
             <div v-if="q.tipo === 'obj'" class="options">
                 <label v-for="(alt, i) in q.alternativas" :key="i" class="option-item"
                     :class="{ selected: respostas[idx].escolha === i }">
-                    <input type="radio" :name="'q'+idx" :value="i" v-model="respostas[idx].escolha">
+                    <input type="radio" :name="'q'+idx" :value="i" v-model.number="respostas[idx].escolha">
                     <span class="option-text">{{ alt }}</span>
                 </label>
             </div>
@@ -438,7 +474,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         (function () {
-            // ---------- DADOS DOS ALUNOS (atualizado a partir das listas oficiais das turmas) ----------
+            // ---------- DADOS DOS ALUNOS ----------
             const alunosData = {
                 A: [
                     { num: 1, nome: 'ANA CHRYSTINA TIEKO DA PAIXAO', ra: '115865039', dig: '5', email: '00001158650395SP@al.educacao.sp.gov.br' },
@@ -534,7 +570,7 @@
                 ]
             };
 
-            // ---------- QUESTÕES (Aulas 1 a 6 - 3º Bimestre - Guia Priorizado - A célula) ----------
+            // ---------- QUESTÕES ----------
             const questoes = [
                  {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
@@ -605,7 +641,7 @@
                 }
             ];
 
-            // ---------- VUE ----------
+            // ---------- VUE APP ----------
             new Vue({
                 el: '#app',
                 data: {
@@ -618,8 +654,12 @@
                     alunosFiltrados: [],
                     questoes: questoes,
                     enviando: false,
-                    // URL do Aplicativo da Web (Web App) do Google Apps Script
-                    webAppUrl: 'https://script.google.com/macros/s/AKfycbzkz96lVnKacWKTkj4AXQCaY_LR9Z3WCBkn9dNt5LtgxIbMe8iHwR9z9ZzPDCKerQyv/exec',
+                    mostrarErro: false,
+                    mostrarSucesso: false,
+                    mensagemErro: '',
+                    mensagemSucesso: '',
+                    // ✅ ATUALIZE ESTA URL COM A URL DO SEU APPS SCRIPT
+                    webAppUrl: 'https://script.google.com/macros/s/AKfycbwODrckdYB9nTIH06lWxWijr-z7eeb6k7qwb7p6woTLmiplzQ04SNB0YS-FPtNZWb3w/exec',
                     respostas: questoes.map(q => {
                         if (q.tipo === 'obj') {
                             return { tipo: 'obj', escolha: null };
@@ -630,6 +670,8 @@
                 },
                 mounted() {
                     this.dataAtividade = new Date().toLocaleDateString('pt-BR');
+
+                    // Carregar dados salvos localmente (rascunho)
                     const saved = localStorage.getItem('respostas_ciencias_6ano_lydia_3bim_celula');
                     if (saved) {
                         try {
@@ -688,20 +730,33 @@
                             this.emailAluno = '';
                         }
                     },
+                    mostrarMensagem(tipo, mensagem, duracao = 5000) {
+                        if (tipo === 'erro') {
+                            this.mensagemErro = mensagem;
+                            this.mostrarErro = true;
+                            setTimeout(() => { this.mostrarErro = false; }, duracao);
+                        } else if (tipo === 'sucesso') {
+                            this.mensagemSucesso = mensagem;
+                            this.mostrarSucesso = true;
+                            setTimeout(() => { this.mostrarSucesso = false; }, duracao);
+                        }
+                    },
                     enviarRespostas() {
+                        // ✅ VALIDAÇÃO 1: Verificar seleção de turma e aluno
                         if (!this.turmaSelecionada || !this.alunoSelecionado) {
-                            alert('Por favor, selecione primeiro a turma e depois o seu nome na lista.');
+                            this.mostrarMensagem('erro', 'Por favor, selecione a turma e o nome na lista.');
                             return;
                         }
 
-                        if (!this.webAppUrl) {
-                            const url = prompt("Para enviar, preciso da 'URL do Aplicativo da Web' do seu Google Apps Script.\n\nCole a URL aqui (ex: https://script.google.com/.../exec):");
-                            if (!url) return;
-                            this.webAppUrl = url;
+                        // ✅ VALIDAÇÃO 2: Verificar se tem URL do Apps Script
+                        if (!this.webAppUrl || this.webAppUrl.trim() === '') {
+                            this.mostrarMensagem('erro', 'URL do Apps Script não configurada.');
+                            return;
                         }
 
                         this.enviando = true;
 
+                        // ✅ CONSTRUIR PAYLOAD CORRETAMENTE
                         const payload = {
                             timestamp: new Date().toLocaleString('pt-BR'),
                             data: this.dataAtividade,
@@ -728,31 +783,44 @@
                             })
                         };
 
-                        // ✅ CORREÇÃO PRINCIPAL: Mudar de text/plain para application/json
+                        console.log('📦 Enviando payload:', JSON.stringify(payload, null, 2));
+
+                        // ✅ ENVIAR COM application/json
                         fetch(this.webAppUrl, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8'
+                            },
                             body: JSON.stringify(payload)
                         })
                             .then(response => {
-                                // Melhor tratamento de resposta
+                                console.log('📥 Resposta recebida. Status:', response.status);
+                                
                                 if (!response.ok) {
-                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                                 }
+                                
                                 return response.json();
                             })
                             .then(data => {
-                                // Verificar se o Apps Script retornou sucesso
+                                console.log('✅ Resposta JSON parseada:', data);
+                                
                                 if (data.status === 'success') {
-                                    alert('✅ Sucesso! Suas respostas foram enviadas para correção por IA e gravadas na planilha.\n\nVerifique a aba "6ºAno (Célula)".');
-                                    this.excluirRespostasSilencioso();
+                                    this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} foram registradas!`, 6000);
+                                    console.log('🎉 Sucesso confirmado!');
+                                    
+                                    // Limpar respostas após sucesso
+                                    setTimeout(() => {
+                                        this.excluirRespostasSilencioso();
+                                    }, 2000);
                                 } else {
-                                    alert('⚠️ Aviso: ' + (data.message || 'Erro desconhecido ao processar a resposta'));
+                                    this.mostrarMensagem('erro', `⚠️ ${data.message || 'Erro desconhecido ao processar resposta'}`, 6000);
+                                    console.error('❌ Resposta indicou erro:', data);
                                 }
                             })
                             .catch(err => {
-                                console.error('Erro detalhado:', err);
-                                alert('❌ Erro ao enviar para o Google Sheets:\n' + err.message + '\n\nVerifique sua conexão e a URL do script.');
+                                console.error('❌ Erro na requisição:', err);
+                                this.mostrarMensagem('erro', `❌ Erro ao enviar: ${err.message}. Verifique a URL do Apps Script.`, 7000);
                             })
                             .finally(() => {
                                 this.enviando = false;
@@ -761,7 +829,7 @@
                     excluirRespostas() {
                         if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
                             this.excluirRespostasSilencioso();
-                            alert('Todas as respostas foram excluídas.');
+                            this.mostrarMensagem('sucesso', 'Todas as respostas foram excluídas.', 3000);
                         }
                     },
                     excluirRespostasSilencioso() {
