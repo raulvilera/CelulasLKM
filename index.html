@@ -658,7 +658,7 @@
                     mostrarSucesso: false,
                     mensagemErro: '',
                     mensagemSucesso: '',
-                    // ✅ ATUALIZE ESTA URL COM A URL DO SEU APPS SCRIPT
+                    // ✅ ATUALIZE ESTA URL COM A URL DO SEU APPS SCRIPT (deployment mais recente)
                     webAppUrl: 'https://script.google.com/macros/s/AKfycbz3mB5jdY9V699fTpkAMZFBMgxAVHNKYx69dd3O7ae5Hz0jJRNmOYf8Ta6zER1basCZ/exec',
                     respostas: questoes.map(q => {
                         if (q.tipo === 'obj') {
@@ -785,30 +785,36 @@
 
                         console.log('📦 Enviando payload:', JSON.stringify(payload, null, 2));
 
-                        // ✅ ENVIAR COM application/json
+                        // ✅ CORREÇÃO DE CORS: usar 'text/plain' em vez de 'application/json'.
+                        // Com 'application/json' o navegador dispara uma requisição de
+                        // preflight (OPTIONS) que o Google Apps Script não responde,
+                        // e isso bloqueia o envio por CORS. Com 'text/plain' a requisição
+                        // é tratada como "simples" (sem preflight) e o backend continua
+                        // funcionando normalmente, pois o doPost() já faz JSON.parse()
+                        // do conteúdo bruto, independente do Content-Type declarado.
                         fetch(this.webAppUrl, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json;charset=utf-8'
+                                'Content-Type': 'text/plain;charset=utf-8'
                             },
                             body: JSON.stringify(payload)
                         })
                             .then(response => {
                                 console.log('📥 Resposta recebida. Status:', response.status);
-                                
+
                                 if (!response.ok) {
                                     throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                                 }
-                                
+
                                 return response.json();
                             })
                             .then(data => {
                                 console.log('✅ Resposta JSON parseada:', data);
-                                
+
                                 if (data.status === 'success') {
                                     this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} foram registradas!`, 6000);
                                     console.log('🎉 Sucesso confirmado!');
-                                    
+
                                     // Limpar respostas após sucesso
                                     setTimeout(() => {
                                         this.excluirRespostasSilencioso();
