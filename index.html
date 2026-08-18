@@ -271,6 +271,19 @@
             gap: 12px;
             border: 1px dashed #ffb347;
             text-align: center;
+            flex-direction: column;
+        }
+
+        .img-placeholder img {
+            max-width: 100%;
+            max-height: 260px;
+            border-radius: 14px;
+            display: block;
+        }
+
+        .img-placeholder .img-caption {
+            font-size: 0.85rem;
+            color: #1a4b79;
         }
 
         .img-placeholder i {
@@ -522,8 +535,11 @@
             };
 
             // ---------- QUESTÕES (Aulas 1 a 6 - 3º Bimestre - Guia Priorizado - A célula) ----------
+            // Cada questão tem um campo "img" pronto com uma tag <img>. Troque SOMENTE o valor
+            // dentro de src="..." pelo link da imagem que você quiser usar (uma URL terminada
+            // em .jpg, .png, .gif etc). O texto dentro de <span class="img-caption"> é a legenda.
             const questoes = [
-                {
+                 {
                     // Aula 1 - Teoria celular / unicelulares e pluricelulares
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
                     contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida (alimentar-se, respirar e se reproduzir); e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto, cada uma exercendo uma função específica para manter o organismo funcionando. Essa observação é uma aplicação prática da Teoria Celular, segundo a qual a célula é considerada a menor unidade estrutural e funcional dos seres vivos.',
@@ -531,7 +547,7 @@
                     img: '<i class="fas fa-microscope"></i> observação de organismos em uma gota de água',
                     alternativas: ['pluricelular e unicelular', 'unicelular e pluricelular', 'procarionte e eucarionte', 'autótrofo e heterótrofo'], correta: 1
                 },
-                {
+                   {
                     // Aula 2 - Desenvolvimento da microscopia
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 2',
                     contexto: 'No século XVII, o cientista holandês Anton van Leeuwenhoek aperfeiçoou lentes e construiu microscópios artesanais capazes de ampliar imagens centenas de vezes, tornando-se o primeiro a observar e descrever bactérias e outros microrganismos, que ele chamava de "animálculos". Pouco antes dele, o inglês Robert Hooke havia utilizado um microscópio rudimentar para observar fatias finas de cortiça e identificou pequenos compartimentos vazios, que nomeou de "cellulae" (pequenas células), termo que deu origem à palavra "célula", usada até hoje.',
@@ -539,7 +555,7 @@
                     img: '<i class="fas fa-history"></i> Hooke e Leeuwenhoek: os primeiros microscópios',
                     alternativas: ['permitiram calcular com exatidão a idade da Terra', 'tornaram possível observar estruturas microscópicas invisíveis a olho nu, como células e microrganismos', 'substituíram definitivamente a necessidade de qualquer outro instrumento científico', 'provaram que todos os seres vivos são formados por uma única célula'], correta: 1
                 },
-                {
+              {
                     // Aula 3 - Estrutura celular básica: membrana, citoplasma, material genético
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 3',
                     contexto: 'Para explicar a estrutura básica de uma célula, uma professora comparou-a a uma pequena fábrica: a parte mais externa, que controla o que entra e o que sai, funciona como o "portão de segurança"; o espaço interno, gelatinoso, onde ocorrem as principais reações químicas e onde ficam mergulhadas as demais estruturas, funciona como o "chão de fábrica"; e a região que guarda as informações genéticas e comanda todas as atividades da célula funciona como o "escritório central", responsável por dar as ordens.',
@@ -555,7 +571,7 @@
                     img: '<i class="fas fa-dna"></i> organização do material genético em duas células diferentes',
                     alternativas: ['procarionte e eucarionte', 'eucarionte e procarionte', 'vegetal e animal', 'unicelular e pluricelular'], correta: 0
                 },
-                {
+               {
                     // Aula 5 - Célula animal / mitocôndria
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 5',
                     contexto: 'Durante uma corrida de 100 metros, as células musculares das pernas de um atleta precisam produzir, em poucos segundos, uma grande quantidade de energia para permitir a contração muscular. Essa energia é obtida por meio de um processo chamado respiração celular, realizado por organelas específicas presentes nas células animais e que costumam ser chamadas de "usinas de energia" da célula.',
@@ -563,7 +579,7 @@
                     img: '<i class="fas fa-running"></i> + <i class="fas fa-bolt"></i> energia para a contração muscular',
                     alternativas: ['o núcleo', 'o ribossomo', 'a mitocôndria', 'o vacúolo'], correta: 2
                 },
-                {
+                  {
                     // Aula 6 - Célula vegetal / cloroplasto / fotossíntese
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 6',
                     contexto: 'Uma folha exposta à luz do sol realiza um processo no qual capta a energia luminosa e a transforma em energia química, produzindo glicose (que serve de alimento para a planta) e liberando oxigênio para a atmosfera. Esse processo ocorre em organelas de cor verde, exclusivas das células vegetais, que contêm um pigmento chamado clorofila, responsável por absorver a luz solar.',
@@ -571,7 +587,7 @@
                     img: '<i class="fas fa-leaf"></i> + <i class="fas fa-sun"></i> a folha captando luz solar',
                     alternativas: ['os cloroplastos', 'as mitocôndrias', 'os vacúolos', 'os ribossomos'], correta: 0
                 },
-                {
+                     {
                     // Aula 5 + 6 - comparação célula animal x vegetal
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
                     contexto: 'Para uma feira de ciências, um grupo de alunos montou uma maquete de célula com formato irregular, sem nenhuma estrutura rígida ao redor da membrana e com pequenos vacúolos espalhados pelo citoplasma. Outro grupo montou uma maquete de célula com formato retangular fixo, apresentando uma estrutura rígida envolvendo a membrana plasmática por fora e um grande vacúolo central, que ocupava a maior parte do espaço interno da célula.',
@@ -579,14 +595,14 @@
                     img: '<i class="fas fa-shapes"></i> duas maquetes de células com formatos diferentes',
                     alternativas: ['vegetal e animal', 'animal e vegetal', 'procarionte e eucarionte', 'bacteriana e fúngica'], correta: 1
                 },
-                {
+                   {
                     // Discursiva - Aula 1
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aula 1',
                     contexto: 'Retome o que foi estudado sobre a Teoria Celular e a classificação dos seres vivos quanto ao número de células.',
                     pergunta: 'Explique, com suas palavras, a diferença entre seres vivos unicelulares e pluricelulares. Em seguida, cite um exemplo de cada tipo, usando organismos estudados em sala de aula ou do seu dia a dia.',
                     img: '<i class="fas fa-bacterium"></i> + <i class="fas fa-paw"></i> seres formados por uma ou várias células'
                 },
-                {
+                  {
                     // Discursiva - Aulas 5 e 6
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
                     contexto: 'Pense em tudo o que você aprendeu sobre as estruturas presentes na célula animal e na célula vegetal.',
@@ -615,8 +631,8 @@
                     alunosFiltrados: [],
                     questoes: questoes,
                     enviando: false,
-                    // URL do Aplicativo da Web (Web App) do Google Apps Script
-                    webAppUrl: 'https://script.google.com/macros/s/AKfycby71L9is3VxIeUFd2f1xiJTrPhOwZKIkbGbiZmZduJ64XDkHSMRBsH1-gZhfzC8uGr9/exec',
+                    // URL do Aplicativo da Web (Web App) do Google Apps Script — testada e funcionando
+                    webAppUrl: 'https://script.google.com/macros/s/AKfycbwODrckdYB9nTIH06lWxWijr-z7eeb6k7qwb7p6woTLmiplzQ04SNB0YS-FPtNZWb3w/exec',
                     respostas: questoes.map(q => {
                         if (q.tipo === 'obj') {
                             return { tipo: 'obj', escolha: null };
