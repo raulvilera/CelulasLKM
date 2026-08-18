@@ -271,7 +271,6 @@
             gap: 12px;
             border: 1px dashed #ffb347;
             text-align: center;
-            flex-direction: column;
         }
 
         .img-placeholder i {
@@ -556,7 +555,7 @@
             const questoes = [
                 {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
-                    contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida; e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto.',
+                    contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida (alimentar-se, respirar e se reproduzir); e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto.',
                     pergunta: 'Com base no texto e na Teoria Celular, os dois organismos observados podem ser classificados corretamente como:',
                     img: '<i class="fas fa-microscope"></i> Observação ao microscópio',
                     alternativas: ['pluricelular e unicelular', 'unicelular e pluricelular', 'procarionte e eucarionte', 'autótrofo e heterótrofo']
@@ -640,8 +639,8 @@
                     mensagemErro: '',
                     mensagemSucesso: '',
                     
-                    // 👉 SUA URL DA IMPLANTAÇÃO (confirme se termina em /exec):
-                    webAppUrl: 'https://script.google.com/macros/s/AKfycby6nEOgnba49nAUHYfF_8_sfOUbe11cCMLpjOtZEfOmRRHjsV3gfZUaRcEQ3VvjloZ-/exec',
+                    // URL da implantação do Google Apps Script
+                    webAppUrl: 'https://script.google.com/macros/s/AKfycbz5_AEG7zYu1tmkPSJ7XuvrfJQ5FQ7u46-lOmU2MimsAiZhzqocLz750pJGefLKD76n/exec',
                     
                     respostas: questoes.map(q => q.tipo === 'obj' ? { tipo: 'obj', escolha: null } : { tipo: 'dis', texto: '' })
                 },
@@ -709,37 +708,20 @@
                             }))
                         };
 
-                        // Requisição com text/plain para contornar preflight CORS
+                        // Envio usando mode: 'no-cors' com Content-Type text/plain para contornar restrições de CORS
                         fetch(endpoint, {
                             method: 'POST',
+                            mode: 'no-cors',
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                             body: JSON.stringify(payload)
                         })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                this.mostrarMensagem('sucesso', `✅ Parabéns ${this.alunoSelecionado.nome}, suas respostas foram registradas com sucesso!`, 7000);
-                                setTimeout(() => { this.excluirRespostasSilencioso(); }, 2500);
-                            } else {
-                                this.mostrarMensagem('erro', `⚠️ Servidor: ${data.message || 'Erro ao registrar'}`);
-                            }
+                        .then(() => {
+                            this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} enviadas para a planilha!`, 8000);
+                            setTimeout(() => { this.excluirRespostasSilencioso(); }, 2000);
                         })
                         .catch(err => {
-                            console.warn('Executando fallback modo no-cors...', err);
-                            // Fallback de garantia: envia para o Google mesmo se o navegador restringir a leitura do redirect
-                            fetch(endpoint, {
-                                method: 'POST',
-                                mode: 'no-cors',
-                                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                                body: JSON.stringify(payload)
-                            })
-                            .then(() => {
-                                this.mostrarMensagem('sucesso', `✅ Suas respostas foram enviadas para a planilha!`, 7000);
-                                setTimeout(() => { this.excluirRespostasSilencioso(); }, 2500);
-                            })
-                            .catch(finalErr => {
-                                this.mostrarMensagem('erro', '❌ Falha ao enviar para o Google Sheets. Verifique a URL do script.');
-                            });
+                            console.error('Erro de envio:', err);
+                            this.mostrarMensagem('erro', '❌ Falha ao enviar para o Google Sheets. Verifique sua conexão ou a URL do script.');
                         })
                         .finally(() => {
                             this.enviando = false;
