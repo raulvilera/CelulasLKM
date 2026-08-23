@@ -281,16 +281,6 @@
             display: block;
         }
 
-        .img-placeholder .img-caption {
-            font-size: 0.85rem;
-            color: #1a4b79;
-        }
-
-        .img-placeholder i {
-            font-size: 2.6rem;
-            color: #9a6a3b;
-        }
-
         .submit-area {
             text-align: center;
             margin: 40px 0 10px;
@@ -657,21 +647,21 @@
 
             // ========== QUESTÕES ==========
             const questoes = [
-                 {
+                {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
                     contexto: 'Ao observar uma gota de água retirada de um lago, uma bióloga identificou, com a ajuda de um microscópio, dois tipos de seres vivos bem diferentes: um pequeno organismo formado por uma única célula, que sozinha realizava todas as funções necessárias à vida (alimentar-se, respirar e se reproduzir); e um pequeno verme formado por milhões de células diferentes, que trabalhavam em conjunto, cada uma exercendo uma função específica para manter o organismo funcionando. Essa observação é uma aplicação prática da Teoria Celular, segundo a qual a célula é considerada a menor unidade estrutural e funcional dos seres vivos.',
                     pergunta: 'Com base no texto e na Teoria Celular, os dois organismos observados pela bióloga podem ser classificados corretamente, respectivamente, como:',
                     img: '<i class="fas fa-microscope"></i> observação de organismos em uma gota de água',
                     alternativas: ['pluricelular e unicelular', 'unicelular e pluricelular', 'procarionte e eucarionte', 'autótrofo e heterótrofo'], correta: 1
                 },
-                   {
+                {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 2',
                     contexto: 'No século XVII, o cientista holandês Anton van Leeuwenhoek aperfeiçoou lentes e construiu microscópios artesanais capazes de ampliar imagens centenas de vezes, tornando-se o primeiro a observar e descrever bactérias e outros microrganismos, que ele chamava de "animálculos". Pouco antes dele, o inglês Robert Hooke havia utilizado um microscópio rudimentar para observar fatias finas de cortiça e identificou pequenos compartimentos vazios, que nomeou de "cellulae" (pequenas células), termo que deu origem à palavra "célula", usada até hoje.',
                     pergunta: 'A invenção e o aperfeiçoamento do microscópio, descritos no texto, foram fundamentais para o desenvolvimento da Biologia porque:',
                     img: '<i class="fas fa-history"></i> Hooke e Leeuwenhoek: os primeiros microscópios',
                     alternativas: ['permitiram calcular com exatidão a idade da Terra', 'tornaram possível observar estruturas microscópicas invisíveis a olho nu, como células e microrganismos', 'substituíram definitivamente a necessidade de qualquer outro instrumento científico', 'provaram que todos os seres vivos são formados por uma única célula'], correta: 1
                 },
-              {
+                {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 3',
                     contexto: 'Para explicar a estrutura básica de uma célula, uma professora comparou-a a uma pequena fábrica: a parte mais externa, que controla o que entra e o que sai, funciona como o "portão de segurança"; o espaço interno, gelatinoso, onde ocorrem as principais reações químicas e onde ficam mergulhadas as demais estruturas, funciona como o "chão de fábrica"; e a região que guarda as informações genéticas e comanda todas as atividades da célula funciona como o "escritório central", responsável por dar as ordens.',
                     pergunta: 'Na comparação feita pela professora, o "portão de segurança", o "chão de fábrica" e o "escritório central" representam, respectivamente, os seguintes componentes celulares:',
@@ -685,34 +675,34 @@
                     img: '<i class="fas fa-dna"></i> organização do material genético em duas células diferentes',
                     alternativas: ['procarionte e eucarionte', 'eucarionte e procarionte', 'vegetal e animal', 'unicelular e pluricelular'], correta: 0
                 },
-               {
+                {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 5',
                     contexto: 'Durante uma corrida de 100 metros, as células musculares das pernas de um atleta precisam produzir, em poucos segundos, uma grande quantidade de energia para permitir a contração muscular. Essa energia é obtida por meio de um processo chamado respiração celular, realizado por organelas específicas presentes nas células animais e que costumam ser chamadas de "usinas de energia" da célula.',
                     pergunta: 'A organela citada no texto, responsável por produzir a energia utilizada pelas células musculares do atleta, é:',
                     img: '<i class="fas fa-running"></i> + <i class="fas fa-bolt"></i> energia para a contração muscular',
                     alternativas: ['o núcleo', 'o ribossomo', 'a mitocôndria', 'o vacúolo'], correta: 2
                 },
-                  {
+                {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 6',
                     contexto: 'Uma folha exposta à luz do sol realiza um processo no qual capta a energia luminosa e a transforma em energia química, produzindo glicose (que serve de alimento para a planta) e liberando oxigênio para a atmosfera. Esse processo ocorre em organelas de cor verde, exclusivas das células vegetais, que contêm um pigmento chamado clorofila, responsável por absorver a luz solar.',
                     pergunta: 'As organelas responsáveis pelo processo descrito no texto, exclusivas das células vegetais, são:',
                     img: '<i class="fas fa-leaf"></i> + <i class="fas fa-sun"></i> a folha captando luz solar',
                     alternativas: ['os cloroplastos', 'as mitocôndrias', 'os vacúolos', 'os ribossomos'], correta: 0
                 },
-                     {
+                {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
                     contexto: 'Para uma feira de ciências, um grupo de alunos montou uma maquete de célula com formato irregular, sem nenhuma estrutura rígida ao redor da membrana e com pequenos vacúolos espalhados pelo citoplasma. Outro grupo montou uma maquete de célula com formato retangular fixo, apresentando uma estrutura rígida envolvendo a membrana plasmática por fora e um grande vacúolo central, que ocupava a maior parte do espaço interno da célula.',
                     pergunta: 'Considerando as estruturas descritas em cada maquete, os dois grupos representaram, respectivamente, células do tipo:',
                     img: '<i class="fas fa-shapes"></i> duas maquetes de células com formatos diferentes',
                     alternativas: ['vegetal e animal', 'animal e vegetal', 'procarionte e eucarionte', 'bacteriana e fúngica'], correta: 1
                 },
-                   {
+                {
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aula 1',
                     contexto: 'Retome o que foi estudado sobre a Teoria Celular e a classificação dos seres vivos quanto ao número de células.',
                     pergunta: 'Explique, com suas palavras, a diferença entre seres vivos unicelulares e pluricelulares. Em seguida, cite um exemplo de cada tipo, usando organismos estudados em sala de aula ou do seu dia a dia.',
                     img: '<i class="fas fa-bacterium"></i> + <i class="fas fa-paw"></i> seres formados por uma ou várias células'
                 },
-                  {
+                {
                     tipo: 'dis', habilidade: 'AE5 · EF06CI05 · Aulas 5 e 6',
                     contexto: 'Pense em tudo o que você aprendeu sobre as estruturas presentes na célula animal e na célula vegetal.',
                     pergunta: 'Compare a célula animal e a célula vegetal, citando pelo menos duas estruturas que existem na célula vegetal, mas não existem na célula animal. Em seguida, explique a função de uma dessas estruturas.',
@@ -748,8 +738,8 @@
                     mensagemSucesso: '',
                     mensagemAviso: '',
                     logDebug: [],
-                    // ⚠️ COPIE A URL DO SEU APPS SCRIPT AQUI
-                    webAppUrl: '',
+                    // 👉 COLE AQUI A SUA URL DO APPS SCRIPT (COM /exec NO FINAL):
+                    webAppUrl: 'https://script.google.com/macros/s/AKfycbwcurg4vY-skJaXeTuTb042kPGzeDX67yr5da5Ysi9QDbw8dy0vdVtBwNRrxxarJcY/exec',
                     respostas: questoes.map(q => {
                         if (q.tipo === 'obj') {
                             return { tipo: 'obj', escolha: null };
@@ -760,7 +750,7 @@
                 },
                 mounted() {
                     this.dataAtividade = new Date().toLocaleDateString('pt-BR');
-                    this.debug('info', '📱 Formulário carregado com sucesso');
+                    this.debug('info', '📱 Formulário carregado');
                     this.verificarUrlAppsScript();
 
                     // Carregar dados salvos localmente
@@ -780,7 +770,7 @@
                                     }
                                 });
                             }
-                            this.debug('success', '✓ Dados salvos anteriormente carregados');
+                            this.debug('success', '✓ Rascunho anterior recuperado');
                         } catch (e) {
                             this.debug('error', '✗ Erro ao carregar cache local: ' + e.message);
                         }
@@ -789,9 +779,7 @@
                 watch: {
                     respostas: {
                         deep: true,
-                        handler() {
-                            this.salvarContextoLocal();
-                        }
+                        handler() { this.salvarContextoLocal(); }
                     },
                     turmaSelecionada() { this.salvarContextoLocal(); },
                     alunoSelecionado() { this.salvarContextoLocal(); }
@@ -800,20 +788,21 @@
                     debug(tipo, msg) {
                         console.log(msg);
                         this.logDebug.push({ tipo, texto: msg });
-                        // Manter apenas os últimos 20 logs
-                        if (this.logDebug.length > 20) {
-                            this.logDebug = this.logDebug.slice(-20);
+                        if (this.logDebug.length > 25) {
+                            this.logDebug = this.logDebug.slice(-25);
                         }
                     },
                     verificarUrlAppsScript() {
                         const urlArmazenada = localStorage.getItem('webAppUrl');
-                        if (urlArmazenada) {
+                        if (urlArmazenada && urlArmazenada.trim() !== '') {
                             this.webAppUrl = urlArmazenada;
-                            this.debug('success', '✓ URL do Apps Script carregada do armazenamento local');
+                            this.debug('success', '✓ URL do Apps Script carregada do localStorage');
+                        } else if (this.webAppUrl && this.webAppUrl.trim() !== '') {
+                            this.debug('success', '✓ URL do Apps Script definida no código');
                         } else {
                             this.debug('error', '✗ URL do Apps Script NÃO foi configurada!');
                             this.mostrarAviso = true;
-                            this.mensagemAviso = 'Você precisa adicionar a URL do Apps Script. Cole a URL do seu script no console do navegador: localStorage.setItem("webAppUrl", "https://...")';
+                            this.mensagemAviso = 'A URL do Google Apps Script precisa ser configurada.';
                         }
                     },
                     salvarContextoLocal() {
@@ -842,7 +831,7 @@
                             this.emailAluno = '';
                         }
                     },
-                    mostrarMensagem(tipo, mensagem, duracao = 5000) {
+                    mostrarMensagem(tipo, mensagem, duracao = 6000) {
                         if (tipo === 'erro') {
                             this.mensagemErro = mensagem;
                             this.mostrarErro = true;
@@ -862,60 +851,52 @@
                     },
                     testarConexao() {
                         if (!this.webAppUrl || this.webAppUrl.trim() === '') {
-                            this.mostrarMensagem('erro', 'URL do Apps Script não foi configurada. Use: localStorage.setItem("webAppUrl", "https://script.google.com/macros/s/AKfycbwcurg4vY-skJaXeTuTb042kPGzeDX67yr5da5Ysi9QDbw8dy0vdVtBwNRrxxarJcY/exec")');
+                            this.mostrarMensagem('erro', 'URL do Apps Script não configurada.');
                             return;
                         }
 
                         this.testando = true;
-                        this.debug('info', '🔌 Testando conexão com Apps Script...');
+                        this.debug('info', '🔌 Testando conexão...');
 
                         const testPayload = {
-                            timestamp: new Date().toLocaleString('pt-BR'),
                             teste: true,
-                            mensagem: 'Teste de conexão'
+                            mensagem: 'Teste de conexão Lydia Kitz Moreira'
                         };
 
+                        // Evita o erro de CORS (OPTIONS) usando text/plain
                         fetch(this.webAppUrl, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'text/plain;charset=utf-8'
                             },
                             body: JSON.stringify(testPayload)
                         })
-                            .then(response => {
-                                this.debug('info', `📥 Resposta HTTP: ${response.status} ${response.statusText}`);
-                                if (!response.ok) {
-                                    throw new Error(`HTTP ${response.status}`);
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                this.debug('success', '✓ Conexão com Apps Script funcionando!');
-                                this.mostrarMensagem('sucesso', '✅ Conexão com Apps Script está funcionando corretamente!');
-                            })
-                            .catch(err => {
-                                this.debug('error', `✗ Erro na conexão: ${err.message}`);
-                                this.mostrarMensagem('erro', `Erro ao conectar: ${err.message}. Verifique a URL do Apps Script.`);
-                            })
-                            .finally(() => {
-                                this.testando = false;
-                            });
+                        .then(response => response.json())
+                        .then(data => {
+                            this.debug('success', '✓ Conexão bem-sucedida!');
+                            this.mostrarMensagem('sucesso', 'Conexão com Google Sheets funcionando!');
+                        })
+                        .catch(err => {
+                            this.debug('error', `✗ Erro: ${err.message}`);
+                            this.mostrarMensagem('erro', `Erro de conexão (${err.message}). Verifique a permissão do Apps Script (Qualquer pessoa / Anyone).`);
+                        })
+                        .finally(() => {
+                            this.testando = false;
+                        });
                     },
                     enviarRespostas() {
-                        // Validação 1: Turma e aluno
                         if (!this.turmaSelecionada || !this.alunoSelecionado) {
-                            this.mostrarMensagem('erro', 'Por favor, selecione a turma e o nome na lista.');
+                            this.mostrarMensagem('erro', 'Por favor, selecione sua Turma e seu Nome na lista antes de enviar.');
                             return;
                         }
 
-                        // Validação 2: URL do Apps Script
                         if (!this.webAppUrl || this.webAppUrl.trim() === '') {
-                            this.mostrarMensagem('erro', 'URL do Apps Script não está configurada. Cole a URL no console: localStorage.setItem("webAppUrl", "https://...")');
+                            this.mostrarMensagem('erro', 'URL do Google Sheets não configurada.');
                             return;
                         }
 
                         this.enviando = true;
-                        this.debug('info', '📦 Preparando payload para envio...');
+                        this.debug('info', '📦 Enviando respostas...');
 
                         const payload = {
                             timestamp: new Date().toLocaleString('pt-BR'),
@@ -943,52 +924,42 @@
                             })
                         };
 
-                        this.debug('info', `📤 Enviando para: ${this.webAppUrl}`);
-                        this.debug('info', `👤 Aluno: ${payload.aluno}`);
-                        this.debug('info', `📚 Turma: ${payload.turma}`);
-
+                        // Evita o erro de CORS (OPTIONS) usando text/plain
                         fetch(this.webAppUrl, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'text/plain;charset=utf-8'
                             },
                             body: JSON.stringify(payload)
                         })
-                            .then(response => {
-                                this.debug('info', `📥 HTTP ${response.status}: ${response.statusText}`);
-                                if (!response.ok) {
-                                    throw new Error(`HTTP ${response.status} ${response.statusText}`);
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                this.debug('info', `📋 Resposta: ${JSON.stringify(data)}`);
-                                
-                                if (data.status === 'success') {
-                                    this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} foram salvas na planilha!`, 6000);
-                                    setTimeout(() => {
-                                        this.excluirRespostasSilencioso();
-                                    }, 2000);
-                                } else {
-                                    this.mostrarMensagem('erro', `⚠️ ${data.message || 'Erro ao processar resposta'}`, 6000);
-                                }
-                            })
-                            .catch(err => {
-                                this.debug('error', `❌ Erro: ${err.message}`);
-                                let mensagem = `Erro ao enviar: ${err.message}`;
-                                if (err.message.includes('NetworkError') || err.message.includes('Failed to fetch')) {
-                                    mensagem += ' (Problema de conexão de rede)';
-                                }
-                                this.mostrarMensagem('erro', mensagem, 7000);
-                            })
-                            .finally(() => {
-                                this.enviando = false;
-                            });
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success' || data.result === 'success') {
+                                this.mostrarMensagem('sucesso', `Respostas de ${this.alunoSelecionado.nome} enviadas com sucesso!`, 7000);
+                                setTimeout(() => {
+                                    this.excluirRespostasSilencioso();
+                                }, 2500);
+                            } else {
+                                this.mostrarMensagem('erro', `Aviso do servidor: ${data.message || 'Erro ao processar'}`);
+                            }
+                        })
+                        .catch(err => {
+                            this.debug('error', `❌ Erro no envio: ${err.message}`);
+                            this.mostrarMensagem('erro', 'Erro ao enviar para o Google Sheets. Verifique sua conexão ou as permissões da implantação do Apps Script.');
+                        })
+                        .finally(() => {
+                            this.enviando = false;
+                        });
                     },
                     excluirRespostas() {
-                        if (confirm('Tem certeza que deseja limpar todas as respostas?')) {
+                        if (confirm('Tem certeza que deseja limpar todas as suas respostas?')) {
                             this.excluirRespostasSilencioso();
-                            this.mostrarMensagem('sucesso', 'Todas as respostas foram excluídas.', 3000);
+                            this.mostrarMensagem('sucesso', 'Respostas limpas com sucesso.', 3000);
                         }
                     },
                     excluirRespostasSilencioso() {
@@ -1000,22 +971,19 @@
                             }
                         });
                         localStorage.removeItem('respostas_ciencias_6ano_lydia_3bim_celula');
-                        this.debug('info', '🗑️ Respostas limpas');
+                        this.debug('info', '🗑️ Formulário redefinido');
                     }
                 }
             });
 
-            // Função global para adicionar a URL do Apps Script no console
             window.configurarUrlAppsScript = function(url) {
                 localStorage.setItem('webAppUrl', url);
-                alert('✅ URL do Apps Script foi configurada com sucesso!\n\nRecarregue a página para aplicar.');
+                alert('URL atualizada com sucesso!');
                 location.reload();
             };
-
-            console.log('%c⚠️  INSTRUÇÕES', 'font-size: 16px; font-weight: bold; color: #ff6b6b;');
-            console.log('%cPara adicionar a URL do Apps Script, copie e cole no console:\n\nconfigurarUrlAppsScript("sua_url_aqui")\n\nExemplo:\nconfigurarUrlAppsScript("https://script.google.com/macros/s/AKfycb.../exec")', 'font-size: 12px; font-family: monospace; background: #f0f0f0; padding: 10px; border-radius: 4px;');
         })();
     </script>
 </body>
 
 </html>
+
