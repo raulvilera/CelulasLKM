@@ -337,6 +337,18 @@
             box-shadow: 0 1px 0 #6d0e0e;
         }
 
+        .btn-test {
+            background: #2d7a4d;
+            box-shadow: 0 5px 0 #1a4a2a;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+
+        .btn-test:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #1a4a2a;
+        }
+
         .footer-note {
             margin-top: 25px;
             color: #3d5a78;
@@ -372,6 +384,57 @@
 
         .success-message.show {
             display: block;
+        }
+
+        .warning-message {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .warning-message.show {
+            display: block;
+        }
+
+        .debug-panel {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .debug-panel.show {
+            display: block;
+        }
+
+        .debug-line {
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .debug-line.error {
+            color: #c92a2a;
+            font-weight: bold;
+        }
+
+        .debug-line.success {
+            color: #2b8a3e;
+            font-weight: bold;
+        }
+
+        .debug-line.info {
+            color: #1971c2;
         }
     </style>
 </head>
@@ -418,12 +481,25 @@
             </div>
         </div>
 
+        <!-- MENSAGENS DE STATUS -->
         <div class="error-message" :class="{ show: mostrarErro }">
             <strong>❌ Erro:</strong> {{ mensagemErro }}
         </div>
 
         <div class="success-message" :class="{ show: mostrarSucesso }">
             <strong>✅ Sucesso:</strong> {{ mensagemSucesso }}
+        </div>
+
+        <div class="warning-message" :class="{ show: mostrarAviso }">
+            <strong>⚠️ Aviso:</strong> {{ mensagemAviso }}
+        </div>
+
+        <!-- PAINEL DE DEBUG -->
+        <div class="debug-panel" :class="{ show: mostrarDebug }">
+            <strong>🔧 Debug Info:</strong>
+            <div v-for="(linha, idx) in logDebug" :key="idx" class="debug-line" :class="linha.tipo">
+                {{ linha.texto }}
+            </div>
         </div>
 
         <div class="title-activity">ATIVIDADE DE CIÊNCIAS <span
@@ -458,23 +534,32 @@
         </div>
 
         <div class="submit-area">
+            <button class="btn btn-test" @click="testarConexao" :disabled="enviando">
+                <i class="fas" :class="testando ? 'fa-spinner fa-spin' : 'fa-plug'"></i>
+                {{ testando ? 'TESTANDO...' : 'TESTAR CONEXÃO' }}
+            </button>
             <button class="btn btn-submit" @click="enviarRespostas" :disabled="enviando">
                 <i class="fas" :class="enviando ? 'fa-spinner fa-spin' : 'fa-cloud-upload-alt'"></i>
-                {{ enviando ? 'ENVIANDO E CORRIGINDO...' : 'ENVIAR' }}
+                {{ enviando ? 'ENVIANDO...' : 'ENVIAR' }}
             </button>
-            <button class="btn btn-delete" @click="excluirRespostas" :disabled="enviando"><i
-                    class="fas fa-trash-alt"></i> EXCLUIR</button>
+            <button class="btn btn-delete" @click="excluirRespostas" :disabled="enviando">
+                <i class="fas fa-trash-alt"></i> EXCLUIR
+            </button>
         </div>
+
         <div class="footer-note">
-            <i class="fas fa-robot"></i> respostas discursivas serão corrigidas por IA automaticamente • planilha:
-            aba "6ºAno (Célula)"
+            <i class="fas fa-robot"></i> respostas discursivas serão corrigidas por IA automaticamente • planilha: aba "6ºAno (Célula)"
+            <br>
+            <small style="cursor: pointer; color: #0066cc;" @click="mostrarDebug = !mostrarDebug">
+                [{{ mostrarDebug ? 'ocultar' : 'mostrar' }} informações técnicas]
+            </small>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         (function () {
-            // ---------- DADOS DOS ALUNOS ----------
+            // ========== DADOS DOS ALUNOS ==========
             const alunosData = {
                 A: [
                     { num: 1, nome: 'ANA CHRYSTINA TIEKO DA PAIXAO', ra: '115865039', dig: '5', email: '00001158650395SP@al.educacao.sp.gov.br' },
@@ -570,7 +655,7 @@
                 ]
             };
 
-            // ---------- QUESTÕES ----------
+            // ========== QUESTÕES ==========
             const questoes = [
                  {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
@@ -641,7 +726,7 @@
                 }
             ];
 
-            // ---------- VUE APP ----------
+            // ========== VUE APP ==========
             new Vue({
                 el: '#app',
                 data: {
@@ -654,12 +739,17 @@
                     alunosFiltrados: [],
                     questoes: questoes,
                     enviando: false,
+                    testando: false,
                     mostrarErro: false,
                     mostrarSucesso: false,
+                    mostrarAviso: false,
+                    mostrarDebug: false,
                     mensagemErro: '',
                     mensagemSucesso: '',
-                    // ✅ ATUALIZE ESTA URL COM A URL DO SEU APPS SCRIPT
-                    webAppUrl: 'https://script.google.com/macros/s/AKfycbwcurg4vY-skJaXeTuTb042kPGzeDX67yr5da5Ysi9QDbw8dy0vdVtBwNRrxxarJcY/exec',
+                    mensagemAviso: '',
+                    logDebug: [],
+                    // ⚠️ COPIE A URL DO SEU APPS SCRIPT AQUI
+                    webAppUrl: '',
                     respostas: questoes.map(q => {
                         if (q.tipo === 'obj') {
                             return { tipo: 'obj', escolha: null };
@@ -670,8 +760,10 @@
                 },
                 mounted() {
                     this.dataAtividade = new Date().toLocaleDateString('pt-BR');
+                    this.debug('info', '📱 Formulário carregado com sucesso');
+                    this.verificarUrlAppsScript();
 
-                    // Carregar dados salvos localmente (rascunho)
+                    // Carregar dados salvos localmente
                     const saved = localStorage.getItem('respostas_ciencias_6ano_lydia_3bim_celula');
                     if (saved) {
                         try {
@@ -688,8 +780,9 @@
                                     }
                                 });
                             }
+                            this.debug('success', '✓ Dados salvos anteriormente carregados');
                         } catch (e) {
-                            console.error("Erro ao carregar cache local", e);
+                            this.debug('error', '✗ Erro ao carregar cache local: ' + e.message);
                         }
                     }
                 },
@@ -704,6 +797,25 @@
                     alunoSelecionado() { this.salvarContextoLocal(); }
                 },
                 methods: {
+                    debug(tipo, msg) {
+                        console.log(msg);
+                        this.logDebug.push({ tipo, texto: msg });
+                        // Manter apenas os últimos 20 logs
+                        if (this.logDebug.length > 20) {
+                            this.logDebug = this.logDebug.slice(-20);
+                        }
+                    },
+                    verificarUrlAppsScript() {
+                        const urlArmazenada = localStorage.getItem('webAppUrl');
+                        if (urlArmazenada) {
+                            this.webAppUrl = urlArmazenada;
+                            this.debug('success', '✓ URL do Apps Script carregada do armazenamento local');
+                        } else {
+                            this.debug('error', '✗ URL do Apps Script NÃO foi configurada!');
+                            this.mostrarAviso = true;
+                            this.mensagemAviso = 'Você precisa adicionar a URL do Apps Script. Cole a URL do seu script no console do navegador: localStorage.setItem("webAppUrl", "https://...")';
+                        }
+                    },
                     salvarContextoLocal() {
                         const data = {
                             turma: this.turmaSelecionada,
@@ -734,29 +846,77 @@
                         if (tipo === 'erro') {
                             this.mensagemErro = mensagem;
                             this.mostrarErro = true;
+                            this.debug('error', '❌ ' + mensagem);
                             setTimeout(() => { this.mostrarErro = false; }, duracao);
                         } else if (tipo === 'sucesso') {
                             this.mensagemSucesso = mensagem;
                             this.mostrarSucesso = true;
+                            this.debug('success', '✅ ' + mensagem);
                             setTimeout(() => { this.mostrarSucesso = false; }, duracao);
+                        } else if (tipo === 'aviso') {
+                            this.mensagemAviso = mensagem;
+                            this.mostrarAviso = true;
+                            this.debug('info', '⚠️ ' + mensagem);
+                            setTimeout(() => { this.mostrarAviso = false; }, duracao);
                         }
                     },
+                    testarConexao() {
+                        if (!this.webAppUrl || this.webAppUrl.trim() === '') {
+                            this.mostrarMensagem('erro', 'URL do Apps Script não foi configurada. Use: localStorage.setItem("webAppUrl", "https://script.google.com/macros/s/AKfycbwcurg4vY-skJaXeTuTb042kPGzeDX67yr5da5Ysi9QDbw8dy0vdVtBwNRrxxarJcY/exec")');
+                            return;
+                        }
+
+                        this.testando = true;
+                        this.debug('info', '🔌 Testando conexão com Apps Script...');
+
+                        const testPayload = {
+                            timestamp: new Date().toLocaleString('pt-BR'),
+                            teste: true,
+                            mensagem: 'Teste de conexão'
+                        };
+
+                        fetch(this.webAppUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(testPayload)
+                        })
+                            .then(response => {
+                                this.debug('info', `📥 Resposta HTTP: ${response.status} ${response.statusText}`);
+                                if (!response.ok) {
+                                    throw new Error(`HTTP ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                this.debug('success', '✓ Conexão com Apps Script funcionando!');
+                                this.mostrarMensagem('sucesso', '✅ Conexão com Apps Script está funcionando corretamente!');
+                            })
+                            .catch(err => {
+                                this.debug('error', `✗ Erro na conexão: ${err.message}`);
+                                this.mostrarMensagem('erro', `Erro ao conectar: ${err.message}. Verifique a URL do Apps Script.`);
+                            })
+                            .finally(() => {
+                                this.testando = false;
+                            });
+                    },
                     enviarRespostas() {
-                        // ✅ VALIDAÇÃO 1: Verificar seleção de turma e aluno
+                        // Validação 1: Turma e aluno
                         if (!this.turmaSelecionada || !this.alunoSelecionado) {
                             this.mostrarMensagem('erro', 'Por favor, selecione a turma e o nome na lista.');
                             return;
                         }
 
-                        // ✅ VALIDAÇÃO 2: Verificar se tem URL do Apps Script
+                        // Validação 2: URL do Apps Script
                         if (!this.webAppUrl || this.webAppUrl.trim() === '') {
-                            this.mostrarMensagem('erro', 'URL do Apps Script não configurada.');
+                            this.mostrarMensagem('erro', 'URL do Apps Script não está configurada. Cole a URL no console: localStorage.setItem("webAppUrl", "https://...")');
                             return;
                         }
 
                         this.enviando = true;
+                        this.debug('info', '📦 Preparando payload para envio...');
 
-                        // ✅ CONSTRUIR PAYLOAD CORRETAMENTE
                         const payload = {
                             timestamp: new Date().toLocaleString('pt-BR'),
                             data: this.dataAtividade,
@@ -783,44 +943,43 @@
                             })
                         };
 
-                        console.log('📦 Enviando payload:', JSON.stringify(payload, null, 2));
+                        this.debug('info', `📤 Enviando para: ${this.webAppUrl}`);
+                        this.debug('info', `👤 Aluno: ${payload.aluno}`);
+                        this.debug('info', `📚 Turma: ${payload.turma}`);
 
-                        // ✅ ENVIAR COM text/plain (contorna erro CORS do GitHub Pages)
                         fetch(this.webAppUrl, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'text/plain;charset=utf-8'
+                                'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(payload)
                         })
                             .then(response => {
-                                console.log('📥 Resposta recebida. Status:', response.status);
-                                
+                                this.debug('info', `📥 HTTP ${response.status}: ${response.statusText}`);
                                 if (!response.ok) {
-                                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                                    throw new Error(`HTTP ${response.status} ${response.statusText}`);
                                 }
-                                
                                 return response.json();
                             })
                             .then(data => {
-                                console.log('✅ Resposta JSON parseada:', data);
+                                this.debug('info', `📋 Resposta: ${JSON.stringify(data)}`);
                                 
                                 if (data.status === 'success') {
-                                    this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} foram registradas!`, 6000);
-                                    console.log('🎉 Sucesso confirmado!');
-                                    
-                                    // Limpar respostas após sucesso
+                                    this.mostrarMensagem('sucesso', `✅ Sucesso! Respostas de ${this.alunoSelecionado.nome} foram salvas na planilha!`, 6000);
                                     setTimeout(() => {
                                         this.excluirRespostasSilencioso();
                                     }, 2000);
                                 } else {
-                                    this.mostrarMensagem('erro', `⚠️ ${data.message || 'Erro desconhecido ao processar resposta'}`, 6000);
-                                    console.error('❌ Resposta indicou erro:', data);
+                                    this.mostrarMensagem('erro', `⚠️ ${data.message || 'Erro ao processar resposta'}`, 6000);
                                 }
                             })
                             .catch(err => {
-                                console.error('❌ Erro na requisição:', err);
-                                this.mostrarMensagem('erro', `❌ Erro ao enviar: ${err.message}. Verifique a URL do Apps Script.`, 7000);
+                                this.debug('error', `❌ Erro: ${err.message}`);
+                                let mensagem = `Erro ao enviar: ${err.message}`;
+                                if (err.message.includes('NetworkError') || err.message.includes('Failed to fetch')) {
+                                    mensagem += ' (Problema de conexão de rede)';
+                                }
+                                this.mostrarMensagem('erro', mensagem, 7000);
                             })
                             .finally(() => {
                                 this.enviando = false;
@@ -841,9 +1000,20 @@
                             }
                         });
                         localStorage.removeItem('respostas_ciencias_6ano_lydia_3bim_celula');
+                        this.debug('info', '🗑️ Respostas limpas');
                     }
                 }
             });
+
+            // Função global para adicionar a URL do Apps Script no console
+            window.configurarUrlAppsScript = function(url) {
+                localStorage.setItem('webAppUrl', url);
+                alert('✅ URL do Apps Script foi configurada com sucesso!\n\nRecarregue a página para aplicar.');
+                location.reload();
+            };
+
+            console.log('%c⚠️  INSTRUÇÕES', 'font-size: 16px; font-weight: bold; color: #ff6b6b;');
+            console.log('%cPara adicionar a URL do Apps Script, copie e cole no console:\n\nconfigurarUrlAppsScript("sua_url_aqui")\n\nExemplo:\nconfigurarUrlAppsScript("https://script.google.com/macros/s/AKfycb.../exec")', 'font-size: 12px; font-family: monospace; background: #f0f0f0; padding: 10px; border-radius: 4px;');
         })();
     </script>
 </body>
