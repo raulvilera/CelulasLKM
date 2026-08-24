@@ -47,7 +47,7 @@
             margin-bottom: 25px;
             display: flex;
             flex-wrap: wrap;
-            gap: 20px 20px;
+            gap: 20px;
             align-items: center;
             border: 1px solid #bdd3f0;
         }
@@ -274,13 +274,6 @@
             flex-direction: column;
         }
 
-        .img-placeholder img {
-            max-width: 100%;
-            max-height: 260px;
-            border-radius: 14px;
-            display: block;
-        }
-
         .submit-area {
             text-align: center;
             margin: 40px 0 10px;
@@ -334,11 +327,6 @@
             padding: 8px 16px;
         }
 
-        .btn-test:active {
-            transform: translateY(4px);
-            box-shadow: 0 1px 0 #1a4a2a;
-        }
-
         .footer-note {
             margin-top: 25px;
             color: #3d5a78;
@@ -358,9 +346,7 @@
             display: none;
         }
 
-        .error-message.show {
-            display: block;
-        }
+        .error-message.show { display: block; }
 
         .success-message {
             background: #d4edda;
@@ -372,9 +358,7 @@
             display: none;
         }
 
-        .success-message.show {
-            display: block;
-        }
+        .success-message.show { display: block; }
 
         .warning-message {
             background: #fff3cd;
@@ -386,9 +370,7 @@
             display: none;
         }
 
-        .warning-message.show {
-            display: block;
-        }
+        .warning-message.show { display: block; }
 
         .debug-panel {
             background: #f5f5f5;
@@ -404,28 +386,11 @@
             display: none;
         }
 
-        .debug-panel.show {
-            display: block;
-        }
-
-        .debug-line {
-            padding: 4px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .debug-line.error {
-            color: #c92a2a;
-            font-weight: bold;
-        }
-
-        .debug-line.success {
-            color: #2b8a3e;
-            font-weight: bold;
-        }
-
-        .debug-line.info {
-            color: #1971c2;
-        }
+        .debug-panel.show { display: block; }
+        .debug-line { padding: 4px 0; border-bottom: 1px solid #eee; }
+        .debug-line.error { color: #c92a2a; font-weight: bold; }
+        .debug-line.success { color: #2b8a3e; font-weight: bold; }
+        .debug-line.info { color: #1971c2; }
     </style>
 </head>
 
@@ -471,22 +436,20 @@
             </div>
         </div>
 
-        <!-- MENSAGENS DE STATUS -->
+        <!-- MENSAGENS -->
         <div class="error-message" :class="{ show: mostrarErro }">
             <strong>❌ Erro:</strong> {{ mensagemErro }}
         </div>
-
         <div class="success-message" :class="{ show: mostrarSucesso }">
             <strong>✅ Sucesso:</strong> {{ mensagemSucesso }}
         </div>
-
         <div class="warning-message" :class="{ show: mostrarAviso }">
             <strong>⚠️ Aviso:</strong> {{ mensagemAviso }}
         </div>
 
-        <!-- PAINEL DE DEBUG -->
+        <!-- DEBUG -->
         <div class="debug-panel" :class="{ show: mostrarDebug }">
-            <strong>🔧 Debug Info:</strong>
+            <strong>🔧 Debug:</strong>
             <div v-for="(linha, idx) in logDebug" :key="idx" class="debug-line" :class="linha.tipo">
                 {{ linha.texto }}
             </div>
@@ -519,12 +482,12 @@
 
             <div v-else class="discursive-box">
                 <textarea rows="4" v-model="respostas[idx].texto"
-                    placeholder="Digite sua resposta (será avaliada por IA)..."></textarea>
+                    placeholder="Digite sua resposta..."></textarea>
             </div>
         </div>
 
         <div class="submit-area">
-            <button class="btn btn-test" @click="testarConexao" :disabled="enviando">
+            <button class="btn btn-test" @click="testarConexao" :disabled="enviando || testando">
                 <i class="fas" :class="testando ? 'fa-spinner fa-spin' : 'fa-plug'"></i>
                 {{ testando ? 'TESTANDO...' : 'TESTAR CONEXÃO' }}
             </button>
@@ -549,7 +512,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
         (function () {
-            // ========== DADOS DOS ALUNOS ==========
             const alunosData = {
                 A: [
                     { num: 1, nome: 'ANA CHRYSTINA TIEKO DA PAIXAO', ra: '115865039', dig: '5', email: '00001158650395SP@al.educacao.sp.gov.br' },
@@ -580,7 +542,7 @@
                     { num: 31, nome: 'RIQUELME SOTERO RODRIGUES', ra: '123013870', dig: '5', email: '00001230138705SP@al.educacao.sp.gov.br' },
                     { num: 32, nome: 'SOPHIA GIOVANA OLIVEIRA ALVES', ra: '116521364', dig: '3', email: '00001165213643SP@al.educacao.sp.gov.br' },
                     { num: 33, nome: 'VINICIUS BESERRA ARAUJO', ra: '115067918', dig: '9', email: '00001150679189SP@al.educacao.sp.gov.br' },
-                    { num: 34, nome: 'VINICIUS RIBEIRO AMARAL ABRAHAO', ra: '116522317', dig: 'X', email: '0000116522317XSP@al.educacao.sp.gov.br' },
+                    { num: 34, nome: 'VINICIUS RIBEIRO AMARAL ABRAHAO', ra: '116522317', dig: 'X', email: '0000116522317XSP@al.educacao.sp.gov.br' }
                 ],
                 B: [
                     { num: 2, nome: 'ANA CLARA BATISTA BRITO', ra: '114693372', dig: '1', email: '00001146933721SP@al.educacao.sp.gov.br' },
@@ -610,7 +572,7 @@
                     { num: 39, nome: 'WILLIAM ALVES CORAZZA', ra: '116522772', dig: '1', email: '00001165227721SP@al.educacao.sp.gov.br' },
                     { num: 40, nome: 'MANUELA ELI DOS SANTOS SILVA', ra: '115886193', dig: 'X', email: '0000115886193xsp@al.educacao.sp.gov.br' },
                     { num: 41, nome: 'DAVI HENRIQUE SILVA DE MELO', ra: '115877906', dig: '9', email: '00001158779069SP@al.educacao.sp.gov.br' },
-                    { num: 42, nome: 'EVELYN LORRANNY SANTOS OLIVEIRA', ra: '116503639', dig: '3', email: '00001165036393sp@al.educacao.sp.gov.br' },
+                    { num: 42, nome: 'EVELYN LORRANNY SANTOS OLIVEIRA', ra: '116503639', dig: '3', email: '00001165036393sp@al.educacao.sp.gov.br' }
                 ],
                 C: [
                     { num: 1, nome: 'AMANDA MENDES DE SOUZA JOSÉ', ra: '120385412', dig: '2', email: '00001203854122SP@al.educacao.sp.gov.br' },
@@ -641,11 +603,10 @@
                     { num: 35, nome: 'TAYANK ROBER LIMACHI CHOQUE', ra: '115890916', dig: '0', email: '00001158909160sp@al.educacao.sp.gov.br' },
                     { num: 37, nome: 'VICTOR JUNIOR TENORIO COSTA', ra: '121492763', dig: '4', email: '00001214927634sp@al.educacao.sp.gov.br' },
                     { num: 39, nome: 'MELISSA DO NASCIMENTO FREITAS', ra: '115887449', dig: '2', email: '00001158874492SP@al.educacao.sp.gov.br' },
-                    { num: 41, nome: 'LUHARA EMANUELLY SILVA FREITAS', ra: '115072488', dig: '2', email: '00001150724882SP@al.educacao.sp.gov.br' },
+                    { num: 41, nome: 'LUHARA EMANUELLY SILVA FREITAS', ra: '115072488', dig: '2', email: '00001150724882SP@al.educacao.sp.gov.br' }
                 ]
             };
 
-            // ========== QUESTÕES ==========
             const questoes = [
                 {
                     tipo: 'obj', habilidade: 'AE5 · EF06CI05 · Aula 1',
@@ -716,7 +677,6 @@
                 }
             ];
 
-            // ========== VUE APP ==========
             new Vue({
                 el: '#app',
                 data: {
@@ -738,22 +698,14 @@
                     mensagemSucesso: '',
                     mensagemAviso: '',
                     logDebug: [],
-                    // 👉 COLE AQUI A SUA URL DO APPS SCRIPT (COM /exec NO FINAL):
+                    // 👉 SUA URL DO APPS SCRIPT ATUALIZADA:
                     webAppUrl: 'https://script.google.com/macros/s/AKfycbwp0TBeJGhsgO-c2eKVih_r7PI17M-vvg0jad8ZS2DhLUiE6y-R74pYtoA5hqs5Bv6d/exec',
-                    respostas: questoes.map(q => {
-                        if (q.tipo === 'obj') {
-                            return { tipo: 'obj', escolha: null };
-                        } else {
-                            return { tipo: 'dis', texto: '' };
-                        }
-                    })
+                    respostas: questoes.map(q => q.tipo === 'obj' ? { tipo: 'obj', escolha: null } : { tipo: 'dis', texto: '' })
                 },
                 mounted() {
                     this.dataAtividade = new Date().toLocaleDateString('pt-BR');
                     this.debug('info', '📱 Formulário carregado');
-                    this.verificarUrlAppsScript();
 
-                    // Carregar dados salvos localmente
                     const saved = localStorage.getItem('respostas_ciencias_6ano_lydia_3bim_celula');
                     if (saved) {
                         try {
@@ -788,22 +740,7 @@
                     debug(tipo, msg) {
                         console.log(msg);
                         this.logDebug.push({ tipo, texto: msg });
-                        if (this.logDebug.length > 25) {
-                            this.logDebug = this.logDebug.slice(-25);
-                        }
-                    },
-                    verificarUrlAppsScript() {
-                        const urlArmazenada = localStorage.getItem('webAppUrl');
-                        if (urlArmazenada && urlArmazenada.trim() !== '') {
-                            this.webAppUrl = urlArmazenada;
-                            this.debug('success', '✓ URL do Apps Script carregada do localStorage');
-                        } else if (this.webAppUrl && this.webAppUrl.trim() !== '') {
-                            this.debug('success', '✓ URL do Apps Script definida no código');
-                        } else {
-                            this.debug('error', '✗ URL do Apps Script NÃO foi configurada!');
-                            this.mostrarAviso = true;
-                            this.mensagemAviso = 'A URL do Google Apps Script precisa ser configurada.';
-                        }
+                        if (this.logDebug.length > 25) this.logDebug = this.logDebug.slice(-25);
                     },
                     salvarContextoLocal() {
                         const data = {
@@ -850,7 +787,7 @@
                         }
                     },
                     testarConexao() {
-                        if (!this.webAppUrl || this.webAppUrl.trim() === '') {
+                        if (!this.webAppUrl || !this.webAppUrl.trim()) {
                             this.mostrarMensagem('erro', 'URL do Apps Script não configurada.');
                             return;
                         }
@@ -858,27 +795,23 @@
                         this.testando = true;
                         this.debug('info', '🔌 Testando conexão...');
 
-                        const testPayload = {
-                            teste: true,
-                            mensagem: 'Teste de conexão Lydia Kitz Moreira'
-                        };
-
-                        // Evita o erro de CORS (OPTIONS) usando text/plain
                         fetch(this.webAppUrl, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'text/plain;charset=utf-8'
-                            },
-                            body: JSON.stringify(testPayload)
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({ teste: true })
                         })
-                        .then(response => response.json())
+                        .then(res => res.json())
                         .then(data => {
-                            this.debug('success', '✓ Conexão bem-sucedida!');
-                            this.mostrarMensagem('sucesso', 'Conexão com Google Sheets funcionando!');
+                            if (data.status === 'success') {
+                                this.debug('success', '✓ Conexão bem-sucedida!');
+                                this.mostrarMensagem('sucesso', 'Conexão com Google Sheets funcionando perfeitamente!');
+                            } else {
+                                throw new Error(data.message || 'Servidor retornou erro');
+                            }
                         })
                         .catch(err => {
                             this.debug('error', `✗ Erro: ${err.message}`);
-                            this.mostrarMensagem('erro', `Erro de conexão (${err.message}). Verifique a permissão do Apps Script (Qualquer pessoa / Anyone).`);
+                            this.mostrarMensagem('erro', `Erro de conexão: ${err.message}. Verifique a implantação do Apps Script.`);
                         })
                         .finally(() => {
                             this.testando = false;
@@ -890,7 +823,7 @@
                             return;
                         }
 
-                        if (!this.webAppUrl || this.webAppUrl.trim() === '') {
+                        if (!this.webAppUrl || !this.webAppUrl.trim()) {
                             this.mostrarMensagem('erro', 'URL do Google Sheets não configurada.');
                             return;
                         }
@@ -924,33 +857,28 @@
                             })
                         };
 
-                        // Evita o erro de CORS (OPTIONS) usando text/plain
                         fetch(this.webAppUrl, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'text/plain;charset=utf-8'
-                            },
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                             body: JSON.stringify(payload)
                         })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}`);
-                            }
-                            return response.json();
+                        .then(res => {
+                            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                            return res.json();
                         })
                         .then(data => {
-                            if (data.status === 'success' || data.result === 'success') {
-                                this.mostrarMensagem('sucesso', `Respostas de ${this.alunoSelecionado.nome} enviadas com sucesso!`, 7000);
+                            if (data.status === 'success') {
+                                this.mostrarMensagem('sucesso', `Respostas de ${this.alunoSelecionado.nome} enviadas com sucesso! Nota estimada: ${data.nota}`, 8000);
                                 setTimeout(() => {
                                     this.excluirRespostasSilencioso();
-                                }, 2500);
+                                }, 3000);
                             } else {
-                                this.mostrarMensagem('erro', `Aviso do servidor: ${data.message || 'Erro ao processar'}`);
+                                this.mostrarMensagem('erro', `Aviso da planilha: ${data.message || 'Erro ao processar'}`);
                             }
                         })
                         .catch(err => {
                             this.debug('error', `❌ Erro no envio: ${err.message}`);
-                            this.mostrarMensagem('erro', 'Erro ao enviar para o Google Sheets. Verifique sua conexão ou as permissões da implantação do Apps Script.');
+                            this.mostrarMensagem('erro', 'Erro ao enviar para o Google Sheets. Verifique a URL do script e as permissões de acesso.');
                         })
                         .finally(() => {
                             this.enviando = false;
@@ -963,24 +891,12 @@
                         }
                     },
                     excluirRespostasSilencioso() {
-                        this.respostas = this.questoes.map(q => {
-                            if (q.tipo === 'obj') {
-                                return { tipo: 'obj', escolha: null };
-                            } else {
-                                return { tipo: 'dis', texto: '' };
-                            }
-                        });
+                        this.respostas = this.questoes.map(q => q.tipo === 'obj' ? { tipo: 'obj', escolha: null } : { tipo: 'dis', texto: '' });
                         localStorage.removeItem('respostas_ciencias_6ano_lydia_3bim_celula');
                         this.debug('info', '🗑️ Formulário redefinido');
                     }
                 }
             });
-
-            window.configurarUrlAppsScript = function(url) {
-                localStorage.setItem('webAppUrl', url);
-                alert('URL atualizada com sucesso!');
-                location.reload();
-            };
         })();
     </script>
 </body>
